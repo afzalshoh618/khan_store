@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { ShieldCheck, Truck, Clock, MapPin, Phone, Mail, Send, Instagram } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { STORE_CONTACTS } from "@/config/contacts";
@@ -27,10 +28,10 @@ export default function Footer() {
             </div>
             <div>
               <h4 className="text-text-main font-bold text-sm">
-                {t("100% Original Sifat", "100% Оригинальное Качество")}
+                {t("Sinchiklab Tekshirilgan Sifat", "Проверенное Качество")}
               </h4>
               <p className="text-xs text-text-muted">
-                {t("Rasmiy kafolatli aksessuarlar", "Официальная гарантия")}
+                {t("Har bir soat qo'lda tekshiriladi", "Каждая модель проходит ручную проверку")}
               </p>
             </div>
           </div>
@@ -41,10 +42,10 @@ export default function Footer() {
             </div>
             <div>
               <h4 className="text-text-main font-bold text-sm">
-                {t("Tezkor Yetkazish", "Быстрая Доставка")}
+                {t("Butun Dunyo Bo'ylab Yetkazish", "Доставка По Всему Миру")}
               </h4>
               <p className="text-xs text-text-muted">
-                {t("Samarqand, Toshkent va viloyatlarga", "По Самарканду, Ташкенту и регионам")}
+                {t("Samarqand, O'zbekiston va xalqaro delivery", "Быстрая доставка из Самарканда")}
               </p>
             </div>
           </div>
@@ -68,37 +69,43 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 py-10">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-accent-main text-accent-fg font-extrabold flex items-center justify-center">
-                KH
+              <div className="relative h-10 w-10 rounded-xl bg-black overflow-hidden border border-amber-500/40 p-0.5 shadow-xs shrink-0 flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="Khan Store Premium"
+                  width={40}
+                  height={40}
+                  className="object-contain w-full h-full"
+                />
               </div>
               <span className="font-extrabold text-base text-text-main">{STORE_CONTACTS.storeName}</span>
             </div>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Khan Store Premium — soatlar, ko'zoynaklar va kepkalar bo'yicha zamonaviy marketplace. Samarqand va butun O'zbekiston bo'ylab yetkazish.",
-                "Khan Store Premium — современный маркетплейс часов, очков и кепок. Доставка по Самарканду и всему Узбекистану."
+                "Khan Store Premium — Original, Lux Nusxa va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqanddan butun dunyo bo'ylab yetkazish.",
+                "Khan Store Premium — Магазин оригинальных, Lux Копий и Super Clone 1:1 часов. Доставка по всему миру."
               )}
             </p>
           </div>
 
           <div>
             <h5 className="text-text-main font-bold text-xs uppercase tracking-wider mb-3">
-              {t("Kategoriyalar", "Категории")}
+              {t("Soat Sifat Darajalari", "Уровни Качества")}
             </h5>
             <ul className="space-y-2 text-xs font-medium">
               <li>
-                <Link href="/shop?category=watch" className="hover:text-text-main transition-colors">
-                  {t("Soatlar", "Часы")}
+                <Link href="/shop?quality_tier=original" className="hover:text-text-main transition-colors">
+                  {t("Original Soatlar", "Original Часы")}
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=sunglasses" className="hover:text-text-main transition-colors">
-                  {t("Ko'zoynaklar", "Очки")}
+                <Link href="/shop?quality_tier=lux_copy" className="hover:text-text-main transition-colors">
+                  {t("Lux Nusxa Soatlar", "Часы Lux Копия")}
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=cap" className="hover:text-text-main transition-colors">
-                  {t("Kepkalar", "Кепки")}
+                <Link href="/shop?quality_tier=super_clone" className="hover:text-amber-500 font-bold transition-colors">
+                  {t("Super Klon 1:1", "Super Clone 1:1")}
                 </Link>
               </li>
             </ul>

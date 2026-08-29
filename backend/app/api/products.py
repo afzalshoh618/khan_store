@@ -5,7 +5,7 @@ from sqlalchemy import select, func, or_, and_
 from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
-from app.models.product import Product, ProductImage, ProductAttribute
+from app.models.product import Product, ProductImage, ProductAttribute, QualityTier
 from app.models.brand import Brand
 from app.models.category import Category
 from app.models.user import User
@@ -26,6 +26,7 @@ async def list_products(
     search: Optional[str] = Query(None, description="Qidiruv so'zi"),
     category_id: Optional[int] = Query(None),
     category_slug: Optional[str] = Query(None),
+    quality_tier: Optional[QualityTier] = Query(None, description="Sifat darajasi: original, lux_copy, super_clone"),
     brand_id: Optional[int] = Query(None),
     brand_slug: Optional[str] = Query(None),
     gender: Optional[str] = Query(None),
@@ -86,6 +87,8 @@ async def list_products(
         else:
             filters.append(Product.brand_id == -1)
 
+    if quality_tier:
+        filters.append(Product.quality_tier == quality_tier)
     if gender:
         filters.append(Product.gender == gender)
     if mechanism:

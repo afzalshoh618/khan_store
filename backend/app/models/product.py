@@ -1,7 +1,14 @@
+import enum
 from datetime import datetime
-from sqlalchemy import String, Text, Integer, Float, Boolean, DateTime, ForeignKey, Index
+from sqlalchemy import String, Text, Integer, Float, Boolean, DateTime, ForeignKey, Index, Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
+
+
+class QualityTier(str, enum.Enum):
+    ORIGINAL = "original"
+    LUX_COPY = "lux_copy"
+    SUPER_CLONE = "super_clone"
 
 
 class Product(Base):
@@ -29,6 +36,7 @@ class Product(Base):
     category_id: Mapped[int] = mapped_column(Integer, ForeignKey("categories.id"), index=True, nullable=False)
     
     # Direct filters attributes
+    quality_tier: Mapped[QualityTier] = mapped_column(SQLEnum(QualityTier), default=QualityTier.ORIGINAL, index=True, nullable=False)
     gender: Mapped[str] = mapped_column(String(20), default="Erkaklar uchun", index=True) # Erkaklar, Ayollar, Uniseks
     mechanism: Mapped[str] = mapped_column(String(50), default="Avtomatik", index=True) # Avtomatik, Kvars, Mexanik
     case_material: Mapped[str] = mapped_column(String(100), default="Zanglamaydigan po'lat", index=True) # Oltin, Po'lat, Titanius

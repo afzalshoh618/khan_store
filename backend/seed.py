@@ -7,7 +7,7 @@ from app.core.security import get_password_hash
 from app.models.user import User, UserRole
 from app.models.category import Category
 from app.models.brand import Brand
-from app.models.product import Product, ProductImage, ProductAttribute
+from app.models.product import Product, ProductImage, ProductAttribute, QualityTier
 
 
 async def seed_data():
@@ -17,7 +17,7 @@ async def seed_data():
         await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as session:
-        print("[+] Khan Store 3-kategoriya (Soatlar, Ko'zoynaklar, Kepkalar) ma'lumotlarini kiritish boshlandi...")
+        print("[+] Khan Store Soatlar Do'koni (3 ta Sifat Darajasi: Original, Lux Kopiya, Super Klon 1:1) ma'lumotlarini yuklash boshlandi...")
 
         # 1. Create Admin User
         import os
@@ -33,45 +33,29 @@ async def seed_data():
         )
         session.add(admin_user)
         await session.flush()
-        print(f"[+] Admin foydalanuvchi yaratildi: Email='{admin_email}' (Parolni admin paneldan almashtiring)")
+        print(f"[+] Admin foydalanuvchi yaratildi: Email='{admin_email}'")
 
-        # 2. Create 3 Main Categories
+        # 2. Main Category: Soatlar
         cat_watch = Category(
             name="Soatlar",
             slug="watch",
-            description="Klassik, sport va zamonaviy qo'l soatlari kolleksiyasi.",
+            description="Klassik, sport va eksklyuziv qo'l soatlari kolleksiyasi.",
             image_url="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
             display_order=1,
         )
-        cat_sunglasses = Category(
-            name="Ko'zoynaklar",
-            slug="sunglasses",
-            description="Quyoshdan himoyalovchi va zamonaviy stilist ko'zoynaklar.",
-            image_url="https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1000&auto=format&fit=crop",
-            display_order=2,
-        )
-        cat_cap = Category(
-            name="Kepkalar",
-            slug="cap",
-            description="Premium brendli va zamonaviy shahar kepkalari.",
-            image_url="https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=1000&auto=format&fit=crop",
-            display_order=3,
-        )
-        session.add_all([cat_watch, cat_sunglasses, cat_cap])
+        session.add(cat_watch)
         await session.flush()
 
         # 3. Create Brands
         brands_data = [
-            ("Rolex", "rolex", "Shveytsariya soat uyi"),
-            ("Casio", "casio", "Yaponiya elektron va kvars soatlari"),
+            ("Rolex", "rolex", "Shveytsariya afsonaviy soat brendi"),
+            ("Casio", "casio", "Yaponiya kvars va elektron soatlari"),
             ("Tissot", "tissot", "Shveytsariya klassik soatlari"),
             ("Seiko", "seiko", "Yaponiya mexanik va avtomatik soatlari"),
-            ("Ray-Ban", "ray-ban", "Dunyoning mashhur ko'zoynak brendi"),
-            ("Oakley", "oakley", "Sport ko'zoynaklari yetakchisi"),
-            ("Tom Ford", "tom-ford", "Hashamatli uslub va ko'zoynaklar"),
-            ("New Era", "new-era", "Original brendli kepkalar"),
-            ("Adidas", "adidas", "Sport va shahar aksessuarlari"),
-            ("Nike", "nike", "Sport stil kepkalari"),
+            ("Patek Philippe", "patek-philippe", "Hashamatli Shveytsariya soat uyi"),
+            ("Audemars Piguet", "audemars-piguet", "Royallik va sport xronograflari"),
+            ("Hublot", "hublot", "Zamonaviy fujn dizaynli soatlar"),
+            ("Omega", "omega", "Kosmos va g'avvoslar soat markasi"),
         ]
         created_brands = {}
         for name, slug, desc in brands_data:
@@ -80,13 +64,13 @@ async def seed_data():
             await session.flush()
             created_brands[slug] = b
 
-        # 4. Products Payload (SOATLAR, KO'ZOYNAKLAR, KEPKALAR)
+        # 4. Products Payload (ONLY WATCHES WITH 3 QUALITY TIERS)
         products_payload = [
-            # --- SOATLAR ---
+            # --- ORIGINAL ---
             {
                 "name": "Tissot PRX Powermatic 80 Blue",
                 "slug": "tissot-prx-powermatic-80-blue",
-                "short_description": "Shveytsariya avtomatik mexanizmi, 80 soat quvvat zahirasi va moviy siferblat.",
+                "short_description": "Rasmiy Shveytsariya avtomatik mexanizmi, 80 soat quvvat zahirasi va moviy siferblat.",
                 "description": "Tissot PRX 1978-yilgi klassik dizaynning zamonaviy talqini. 80 soatlik quvvat zahirasiga ega Powermatic 80 avtomatik mexanizmi va sapfir shisha bilan ta'minlangan.",
                 "price": 8500000.0,
                 "original_price": 9200000.0,
@@ -95,6 +79,7 @@ async def seed_data():
                 "is_new": True,
                 "brand": created_brands["tissot"],
                 "category": cat_watch,
+                "quality_tier": QualityTier.ORIGINAL,
                 "gender": "Erkaklar uchun",
                 "mechanism": "Avtomatik",
                 "case_material": "316L Zanglamaydigan po'lat",
@@ -105,12 +90,13 @@ async def seed_data():
                     ("Suv o'tkazmaslik", "100m / 10 ATM"),
                     ("Korpus diametri", "40 mm"),
                     ("Shisha", "Sapfir"),
+                    ("Sifat Darajasi", "Original"),
                 ],
             },
             {
                 "name": "Casio Edifice EFV-550D Chronograph",
                 "slug": "casio-edifice-efv-550d",
-                "short_description": "Sport-xronograf dizayni, zanglamaydigan po'lat korpus va aniq kvars mexanizmi.",
+                "short_description": "Original Yaponiya kvars mexanizmi va sport xronograf dizayni.",
                 "description": "Casio Edifice har kunlik taqish uchun mukammal xronograf. 100m suv o'tkazmaslik va sekundomer funksiyasiga ega.",
                 "price": 1850000.0,
                 "original_price": 2100000.0,
@@ -119,6 +105,7 @@ async def seed_data():
                 "is_new": False,
                 "brand": created_brands["casio"],
                 "category": cat_watch,
+                "quality_tier": QualityTier.ORIGINAL,
                 "gender": "Erkaklar uchun",
                 "mechanism": "Kvars",
                 "case_material": "Po'lat",
@@ -129,12 +116,13 @@ async def seed_data():
                     ("Suv o'tkazmaslik", "100m"),
                     ("Korpus diametri", "47 mm"),
                     ("Mexanizm", "Kvars (Yaponiya)"),
+                    ("Sifat Darajasi", "Original"),
                 ],
             },
             {
                 "name": "Seiko 5 Sports Automatic SRPE55K1",
                 "slug": "seiko-5-sports-automatic",
-                "short_description": "Yaponiya avtomatik mexanizmi 4R36 va qora klassik siferblat.",
+                "short_description": "Original Yaponiya 4R36 avtomatik mexanizmi va qora klassik siferblat.",
                 "description": "Seiko 5 Sports — ishonchlilik va chidamlilik timsoli. Shafqatsiz sharoitlarga chidamli Hardlex shishasi va haftaning kuni bilan ta'minlangan.",
                 "price": 3900000.0,
                 "original_price": 4300000.0,
@@ -143,6 +131,7 @@ async def seed_data():
                 "is_new": True,
                 "brand": created_brands["seiko"],
                 "category": cat_watch,
+                "quality_tier": QualityTier.ORIGINAL,
                 "gender": "Erkaklar uchun",
                 "mechanism": "Avtomatik",
                 "case_material": "Po'lat",
@@ -153,175 +142,111 @@ async def seed_data():
                     ("Suv o'tkazmaslik", "100m"),
                     ("Korpus diametri", "40 mm"),
                     ("Quvvat zahirasi", "41 soat"),
+                    ("Sifat Darajasi", "Original"),
                 ],
             },
+
+            # --- SUPER KLON 1:1 ---
             {
-                "name": "Rolex Submariner Date Gold Black",
-                "slug": "rolex-submariner-date-gold-black",
-                "short_description": "Eksklyuziv Shveytsariya g'avvos soati, oltin elementlar va keramik Bezel.",
-                "description": "Afsonaviy Rolex Submariner. Premium darajadagi 18K oltin va Oystersteel gibrid korpusi, Calibre 3235 avtomatik mexanizmi.",
-                "price": 185000000.0,
-                "original_price": 195000000.0,
-                "stock_quantity": 2,
+                "name": "Rolex Submariner Date Gold Black (Super Klon 1:1)",
+                "slug": "rolex-submariner-date-super-clone",
+                "short_description": "Original bilan og'irligi, korpusi va avtomatik Cal.3235 mexanizmi bo'yicha 1:1 klon.",
+                "description": "Eng yuqori Super Klon 1:1 sifat darajasi. Sapfir shisha, 904L zanglamaydigan po'lat va haqiqiy keramik bezel.",
+                "price": 12500000.0,
+                "original_price": 14000000.0,
+                "stock_quantity": 4,
                 "is_featured": True,
                 "is_new": True,
                 "brand": created_brands["rolex"],
                 "category": cat_watch,
+                "quality_tier": QualityTier.SUPER_CLONE,
                 "gender": "Erkaklar uchun",
-                "mechanism": "Avtomatik",
-                "case_material": "Oltin / Po'lat",
+                "mechanism": "Avtomatik (Clone Cal.3235)",
+                "case_material": "904L Po'lat va Keramika",
                 "images": [
                     "https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=1000&auto=format&fit=crop",
                 ],
                 "attributes": [
-                    ("Suv o'tkazmaslik", "300m"),
+                    ("Sifat Darajasi", "Super Klon 1:1"),
+                    ("Suv o'tkazmaslik", "100m"),
                     ("Korpus diametri", "41 mm"),
-                    ("Kafolat", "5 Yil"),
+                    ("Shisha", "Sapfir"),
+                ],
+            },
+            {
+                "name": "Patek Philippe Nautilus 5711 Blue (Super Klon 1:1)",
+                "slug": "patek-philippe-nautilus-super-clone",
+                "short_description": "Super Klon 1:1 aniqlikdagi moviy dial, yupqa korpus va avtomatik mexanizm.",
+                "description": "Patek Philippe afsonaviy Nautilus 5711 modelining Super Klon 1:1 varianti. Original o'lcham va sapfir korpus orqasi.",
+                "price": 14800000.0,
+                "original_price": 16500000.0,
+                "stock_quantity": 3,
+                "is_featured": True,
+                "is_new": True,
+                "brand": created_brands["patek-philippe"],
+                "category": cat_watch,
+                "quality_tier": QualityTier.SUPER_CLONE,
+                "gender": "Erkaklar uchun",
+                "mechanism": "Avtomatik (Cal.324 SC)",
+                "case_material": "316L Po'lat",
+                "images": [
+                    "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1000&auto=format&fit=crop",
+                ],
+                "attributes": [
+                    ("Sifat Darajasi", "Super Klon 1:1"),
+                    ("Korpus diametri", "40 mm"),
+                    ("Shisha", "Sapfir"),
                 ],
             },
 
-            # --- KO'ZOYNAKLAR ---
+            # --- LUX NUSXA ---
             {
-                "name": "Ray-Ban Aviator Classic RB3025 Gold",
-                "slug": "ray-ban-aviator-classic-rb3025",
-                "short_description": "Afsonaviy aviator quyosh ko'zoynagi, oltin ramka va yashil G-15 linzalar.",
-                "description": "1937-yilda AQSH uchuvchilari uchun yaratilgan klassik Ray-Ban Aviator. 100% UV400 quyosh nuridan himoya qiladi va har qanday yuz tuzilishiga mos keladi.",
-                "price": 1950000.0,
-                "original_price": 2200000.0,
-                "stock_quantity": 15,
-                "is_featured": True,
-                "is_new": True,
-                "brand": created_brands["ray-ban"],
-                "category": cat_sunglasses,
-                "gender": "Uniseks",
-                "mechanism": "Aksessuar",
-                "case_material": "Metal Gold Frame",
-                "images": [
-                    "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1000&auto=format&fit=crop",
-                ],
-                "attributes": [
-                    ("UV Himoya", "UV400 Category 3"),
-                    ("Linza turi", "Shisha G-15"),
-                    ("Mamlakat", "Italiya"),
-                ],
-            },
-            {
-                "name": "Oakley Holbrook Matte Black Prizm",
-                "slug": "oakley-holbrook-matte-black-prizm",
-                "short_description": "Sport va faol hayot tarzi uchun Prizm tinlashtiruvchi linzalar.",
-                "description": "Oakley Holbrook zamonaviy Amerika uslubini aks ettiradi. O Matter yengil va mustahkam ramkasi hamda rasm tiniqligini oshiruvchi Prizm linzalar.",
-                "price": 2400000.0,
-                "original_price": 2700000.0,
-                "stock_quantity": 10,
+                "name": "Audemars Piguet Royal Oak Black (Lux Nusxa)",
+                "slug": "audemars-piguet-royal-oak-lux-copy",
+                "short_description": "Yuqori sifatli Lux Kopiya soat, avtomatik mexanizm va sakkiz qirrali korpus.",
+                "description": "Audemars Piguet Royal Oak modelining premium Lux Nusxasi. Alo darajadagi po meva korpus va metall braslet.",
+                "price": 4800000.0,
+                "original_price": 5500000.0,
+                "stock_quantity": 6,
                 "is_featured": True,
                 "is_new": False,
-                "brand": created_brands["oakley"],
-                "category": cat_sunglasses,
+                "brand": created_brands["audemars-piguet"],
+                "category": cat_watch,
+                "quality_tier": QualityTier.LUX_COPY,
                 "gender": "Erkaklar uchun",
-                "mechanism": "Aksessuar",
-                "case_material": "O Matter Polymer",
+                "mechanism": "Avtomatik",
+                "case_material": "Zanglamaydigan po'lat",
                 "images": [
-                    "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1000&auto=format&fit=crop",
                 ],
                 "attributes": [
-                    ("UV Himoya", "100% UVA/UVB/UVC"),
-                    ("Linza texnologiyasi", "Prizm Sapphire"),
-                    ("Og'irligi", "Engil sportiv"),
+                    ("Sifat Darajasi", "Lux Nusxa"),
+                    ("Korpus diametri", "41 mm"),
+                    ("Mexanizm", "Avtomatik"),
                 ],
             },
             {
-                "name": "Tom Ford Soft Square Black Gold",
-                "slug": "tom-ford-soft-square-black-gold",
-                "short_description": "Eksklyuziv 'T' belgili to'q qora ramka va qorong'i linzalar.",
-                "description": "Tom Ford klassik luxury ko'zoynagi. Zamonaviy kvadrat shakl va ikonik oltin 'T' logotipi bilan ishlov berilgan.",
-                "price": 4200000.0,
-                "original_price": 4800000.0,
+                "name": "Hublot Big Bang Unico Titanium (Lux Nusxa)",
+                "slug": "hublot-big-bang-lux-copy",
+                "short_description": "Sportiv va zamonaviy Lux Nusxa xronograf soat, rezina remen.",
+                "description": "Hublot Big Bang modelining yuqori sifatli Lux Kopiyasi. Skelet siferblat va qulay kauchuk remen.",
+                "price": 3900000.0,
+                "original_price": 4500000.0,
                 "stock_quantity": 5,
                 "is_featured": False,
                 "is_new": True,
-                "brand": created_brands["tom-ford"],
-                "category": cat_sunglasses,
-                "gender": "Uniseks",
-                "mechanism": "Aksessuar",
-                "case_material": "Atsetat va Oltin Elementlar",
+                "brand": created_brands["hublot"],
+                "category": cat_watch,
+                "quality_tier": QualityTier.LUX_COPY,
+                "gender": "Erkaklar uchun",
+                "mechanism": "Kvars Xronograf",
+                "case_material": "Po'lat / Kauchuk",
                 "images": [
-                    "https://images.unsplash.com/photo-1508296695146-257a814070b4?q=80&w=1000&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?q=80&w=1000&auto=format&fit=crop",
                 ],
                 "attributes": [
-                    ("UV Himoya", "100% UV Protection"),
-                    ("Ramka materiali", "Premium Italian Acetate"),
-                ],
-            },
-
-            # --- KEPKALAR ---
-            {
-                "name": "New Era 59FIFTY NY Yankees Fitted Cap Black",
-                "slug": "new-era-59fifty-ny-yankees-black",
-                "short_description": "Original Nyu-York Yankis brendli qattiq forma va kashta tikilgan logotip.",
-                "description": "New Era 59FIFTY — butun dunyoda tan olingan afsonaviy beysbol kepkasi. 100% paxta, premium kashta va original Nyu-York Yankis brendi.",
-                "price": 450000.0,
-                "original_price": 520000.0,
-                "stock_quantity": 20,
-                "is_featured": True,
-                "is_new": True,
-                "brand": created_brands["new-era"],
-                "category": cat_cap,
-                "gender": "Uniseks",
-                "mechanism": "Aksessuar",
-                "case_material": "100% Paxta",
-                "images": [
-                    "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=1000&auto=format&fit=crop",
-                ],
-                "attributes": [
-                    ("O'lcham", "Standart sozlangan (Adjustable)"),
-                    ("Material", "Paxta canvas"),
-                    ("Brend", "New Era Genuine"),
-                ],
-            },
-            {
-                "name": "Adidas Classic Trefoil Cap Navy",
-                "slug": "adidas-classic-trefoil-cap-navy",
-                "short_description": "To'q ko'k rangli, kashta logotipli va yengil paxta materialli kepka.",
-                "description": "Adidas trefoil original sport kepkasi. Har kunlik kiyish, sport va shahar aylanmalari uchun juda qulay.",
-                "price": 380000.0,
-                "original_price": 420000.0,
-                "stock_quantity": 14,
-                "is_featured": False,
-                "is_new": False,
-                "brand": created_brands["adidas"],
-                "category": cat_cap,
-                "gender": "Uniseks",
-                "mechanism": "Aksessuar",
-                "case_material": "Paxta",
-                "images": [
-                    "https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?q=80&w=1000&auto=format&fit=crop",
-                ],
-                "attributes": [
-                    ("Rang", "To'q ko'k (Navy)"),
-                    ("Format", "Baseball Cap"),
-                ],
-            },
-            {
-                "name": "Nike Club Metal Swoosh Cap Black",
-                "slug": "nike-club-metal-swoosh-black",
-                "short_description": "Metall Nike swoosh belgisiga ega zamonaviy qora kepka.",
-                "description": "Nike Club metall logotipli kepka. Boshga qulay o'tiradi va kamari orqali o'lchami oson moslashtiriladi.",
-                "price": 420000.0,
-                "original_price": 460000.0,
-                "stock_quantity": 18,
-                "is_featured": True,
-                "is_new": True,
-                "brand": created_brands["nike"],
-                "category": cat_cap,
-                "gender": "Uniseks",
-                "mechanism": "Aksessuar",
-                "case_material": "Polyester / Paxta",
-                "images": [
-                    "https://images.unsplash.com/photo-1534215754734-18e55d13e346?q=80&w=1000&auto=format&fit=crop",
-                ],
-                "attributes": [
-                    ("Logotip", "Metall Swoosh"),
-                    ("O'lcham", "Universal Sozlanuvchi"),
+                    ("Sifat Darajasi", "Lux Nusxa"),
+                    ("Korpus diametri", "44 mm"),
                 ],
             },
         ]
@@ -360,7 +285,7 @@ async def seed_data():
                 )
 
         await session.commit()
-        print("[+] Khan Store 3-kategoriya ma'lumotlari muvaffaqiyatli qayta yuklandi!")
+        print("[+] Khan Store Soatlar va 3 Sifat Darajasi muvaffaqiyatli yuklandi!")
 
 
 if __name__ == "__main__":

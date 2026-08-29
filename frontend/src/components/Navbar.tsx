@@ -37,7 +37,7 @@ export default function Navbar() {
       <div className="bg-bg-subtle border-b border-border-main py-1.5 px-4 text-xs text-text-muted">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="text-[11px] font-medium tracking-wide text-text-muted truncate">
-            {t("Khan Store Premium — Original Aksessuarlar", "Khan Store Premium — Оригинальные Аксессуары")}
+            {t("Khan Store Premium — Eksklyuziv Soatlar Do'koni", "Khan Store Premium — Магазин Эксклюзивных Часов")}
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
@@ -66,21 +66,21 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <nav className="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest text-text-muted">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-semibold uppercase tracking-widest text-text-muted">
           <Link href="/" className="hover:text-text-main transition-colors">
             {t("Bosh sahifa", "Главная")}
           </Link>
           <Link href="/shop" className="hover:text-text-main transition-colors">
             {t("Katalog", "Каталог")}
           </Link>
-          <Link href="/shop?category=watch" className="hover:text-text-main transition-colors">
-            {t("Soatlar", "Часы")}
+          <Link href="/shop?quality_tier=original" className="hover:text-text-main transition-colors">
+            {t("Original", "Original")}
           </Link>
-          <Link href="/shop?category=sunglasses" className="hover:text-text-main transition-colors">
-            {t("Ko'zoynaklar", "Очки")}
+          <Link href="/shop?quality_tier=lux_copy" className="hover:text-text-main transition-colors">
+            {t("Lux Nusxa", "Lux Копия")}
           </Link>
-          <Link href="/shop?category=cap" className="hover:text-text-main transition-colors">
-            {t("Kepkalar", "Кепки")}
+          <Link href="/shop?quality_tier=super_clone" className="hover:text-amber-500 text-amber-500/90 font-bold transition-colors">
+            {t("Super Klon 1:1", "Super Clone 1:1")}
           </Link>
         </nav>
 
@@ -128,25 +128,25 @@ export default function Navbar() {
           <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="block py-1">
             {t("Katalog", "Каталог")}
           </Link>
+          <Link href="/shop?quality_tier=original" onClick={() => setMobileMenuOpen(false)} className="block py-1">
+            {t("Original", "Original")}
+          </Link>
+          <Link href="/shop?quality_tier=lux_copy" onClick={() => setMobileMenuOpen(false)} className="block py-1">
+            {t("Lux Nusxa", "Lux Копия")}
+          </Link>
+          <Link href="/shop?quality_tier=super_clone" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-amber-500 font-bold">
+            {t("Super Klon 1:1", "Super Clone 1:1")}
+          </Link>
           <button
             onClick={() => {
               setMobileMenuOpen(false);
               setIsSearchOpen(true);
             }}
-            className="w-full text-left py-1 flex items-center gap-2 text-amber-500 font-bold"
+            className="w-full text-left py-1 flex items-center gap-2 text-text-muted hover:text-text-main"
           >
             <Search className="w-4 h-4" />
             <span>{t("Qidiruv", "Поиск")}</span>
           </button>
-          <Link href="/shop?category=watch" onClick={() => setMobileMenuOpen(false)} className="block py-1">
-            {t("Soatlar", "Часы")}
-          </Link>
-          <Link href="/shop?category=sunglasses" onClick={() => setMobileMenuOpen(false)} className="block py-1">
-            {t("Ko'zoynaklar", "Очки")}
-          </Link>
-          <Link href="/shop?category=cap" onClick={() => setMobileMenuOpen(false)} className="block py-1">
-            {t("Kepkalar", "Кепки")}
-          </Link>
         </div>
       )}
 

@@ -6,18 +6,18 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 
 export const metadata: Metadata = {
-  title: "Khan Store Premium — Soatlar, Ko'zoynaklar va Kepkalar Do'koni",
+  title: "Khan Store Premium — Eksklyuziv Soatlar Do'koni",
   description:
-    "Khan Store Premium — Samarqand (Atlas SM) va O'zbekistondagi original soatlar, ko'zoynaklar va kepkalar onlayn marketplace'i.",
-  keywords: "Khan Store Premium, Soatlar, Ko'zoynaklar, Kepkalar, Watch Store Samarqand, Atlas SM, Sunglasses, Caps",
+    "Khan Store Premium — Original, Lux Nusxa va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqand va butun dunyo bo'ylab yetkazish.",
+  keywords: "Khan Store Premium, Soatlar, Watch Store Samarqand, Atlas SM, Original Soatlar, Lux Kopiya, Super Klon 1:1, Rolex, Patek Philippe, Tissot",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "Khan Store Premium",
-    description: "Original soatlar, ko'zoynaklar va kepkalar do'koni. Samarqand va O'zbekiston bo'ylab tezkor yetkazish.",
+    title: "Khan Store Premium — Soatlar Do'koni",
+    description: "Original, Lux Nusxa va Super Klon 1:1 soatlar. Samarqanddan butun dunyo bo'ylab yetkazish.",
     images: ["/logo.png"],
   },
 };

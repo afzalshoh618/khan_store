@@ -3,6 +3,7 @@ from typing import Optional, List
 from datetime import datetime
 from app.schemas.brand import BrandResponse
 from app.schemas.category import CategoryResponse
+from app.models.product import QualityTier
 
 
 class ProductImageBase(BaseModel):
@@ -44,6 +45,7 @@ class ProductBase(BaseModel):
     is_active: bool = True
     brand_id: int
     category_id: int
+    quality_tier: QualityTier = QualityTier.ORIGINAL
     gender: str = "Erkaklar uchun"
     mechanism: str = "Avtomatik"
     case_material: str = "Zanglamaydigan po'lat"
@@ -67,6 +69,7 @@ class ProductUpdate(BaseModel):
     is_active: Optional[bool] = None
     brand_id: Optional[int] = None
     category_id: Optional[int] = None
+    quality_tier: Optional[QualityTier] = None
     gender: Optional[str] = None
     mechanism: Optional[str] = None
     case_material: Optional[str] = None

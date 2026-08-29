@@ -18,6 +18,7 @@ export interface ProductType {
   original_price?: number;
   is_featured?: boolean;
   is_new?: boolean;
+  quality_tier?: "original" | "lux_copy" | "super_clone";
   gender?: string;
   mechanism?: string;
   case_material?: string;
@@ -79,7 +80,24 @@ export default function ProductCard({ product }: { product: ProductType }) {
             className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
           />
 
-          {/* Clickable Video Button (Only opens video when clicked) */}
+          {/* Quality Tier Badge */}
+          {product.quality_tier === "super_clone" && (
+            <span className="absolute top-2.5 right-2.5 z-10 bg-amber-500 text-black font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider">
+              SUPER KLON 1:1
+            </span>
+          )}
+          {product.quality_tier === "lux_copy" && (
+            <span className="absolute top-2.5 right-2.5 z-10 bg-blue-600/90 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider backdrop-blur-xs">
+              LUX KOPYA
+            </span>
+          )}
+          {product.quality_tier === "original" && (
+            <span className="absolute top-2.5 right-2.5 z-10 bg-emerald-600/90 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider backdrop-blur-xs">
+              ORIGINAL
+            </span>
+          )}
+
+          {/* Clickable Video Button */}
           {product.video_url && (
             <button
               onClick={handleOpenVideo}

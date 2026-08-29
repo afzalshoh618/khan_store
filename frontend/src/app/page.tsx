@@ -52,63 +52,96 @@ export default function HomePage() {
       {/* Clean Hero Section */}
       <HeroSection />
 
-      {/* Dynamic Circular Categories Showcase Section */}
+      {/* 3 Quality Tiers Showcase Section */}
       <section className="bg-bg-main py-10 sm:py-14 border-b border-border-main transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-8 space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-amber-500">
-              {t("Kolleksiyalar", "Коллекции")}
+              {t("Sifat Darajalari", "Уровни Качества")}
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-text-main">
-              {t("Kategoriya va Kolleksiyalar", "Категории и Коллекции")}
+              {t("Soat Sifat Darajalari", "Категории Исполнения Часов")}
             </h2>
             <p className="text-xs text-text-muted">
-              {t("O'zingizga mos premium aksessuar kategoriyasini tanlang", "Выберите подходящую категорию аксессуаров")}
+              {t("O'zingizga va hamyoningizga mos sifat darajasini tanlang", "Выберите подходящий уровень качества и бюджета")}
             </p>
           </div>
 
-          <div className="flex items-center justify-center flex-wrap gap-6 sm:gap-10">
-            {categoriesLoading
-              ? Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="flex flex-col items-center gap-3 animate-pulse">
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-bg-subtle border border-border-main" />
-                    <div className="h-4 w-16 bg-bg-subtle rounded" />
-                  </div>
-                ))
-              : categories?.map((cat: any) => (
-                  <Link
-                    key={cat.id}
-                    href={`/shop?category=${cat.slug}`}
-                    className="group flex flex-col items-center gap-3 transition-transform active:scale-95"
-                  >
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden p-1 bg-gradient-to-tr from-amber-500/30 via-border-main to-amber-500/60 group-hover:from-amber-500 group-hover:to-amber-300 transition-all duration-300 shadow-md group-hover:shadow-amber-500/20">
-                      <div className="relative w-full h-full rounded-full overflow-hidden bg-bg-subtle">
-                        {cat.image_url ? (
-                          <Image
-                            src={getImageUrl(cat.image_url)}
-                            alt={cat.name}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center font-bold text-lg text-text-main uppercase bg-bg-card">
-                            {cat.name.slice(0, 2)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <h3 className="font-extrabold text-xs sm:text-sm text-text-main group-hover:text-amber-500 transition-colors">
-                        {cat.name}
-                      </h3>
-                      {cat.description && (
-                        <span className="text-[10px] text-text-muted block truncate max-w-[120px]">
-                          {cat.description}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Original Card */}
+            <Link
+              href="/shop?quality_tier=original"
+              className="group relative rounded-2xl overflow-hidden bg-bg-card border border-border-main p-6 transition-all hover:border-amber-500/50 hover:shadow-lg flex flex-col justify-between"
+            >
+              <div className="space-y-2">
+                <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                  {t("Original", "Original")}
+                </span>
+                <h3 className="text-xl font-extrabold text-text-main group-hover:text-amber-500 transition-colors">
+                  {t("Original Soatlar", "Оригинальные Часы")}
+                </h3>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  {t(
+                    "Rasmiy Shveytsariya hamda yapon brendlarining 100% original soatlari.",
+                    "Официальные оригинальные модели швейцарских и японских брендов."
+                  )}
+                </p>
+              </div>
+              <div className="mt-6 flex items-center justify-between text-xs font-bold text-text-main group-hover:text-amber-500">
+                <span>{t("Kolleksiyaga o'tish", "Смотреть коллекцию")}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Lux Copy Card */}
+            <Link
+              href="/shop?quality_tier=lux_copy"
+              className="group relative rounded-2xl overflow-hidden bg-bg-card border border-border-main p-6 transition-all hover:border-amber-500/50 hover:shadow-lg flex flex-col justify-between"
+            >
+              <div className="space-y-2">
+                <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-500 border border-blue-500/20">
+                  {t("Lux Kopiya", "Lux Копия")}
+                </span>
+                <h3 className="text-xl font-extrabold text-text-main group-hover:text-amber-500 transition-colors">
+                  {t("Lux Nusxa Soatlar", "Часы Lux Копия")}
+                </h3>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  {t(
+                    "Yuqori sifatli materiallar va chidamli mexanizmga ega nusxa soatlar.",
+                    "Качественная копия из отличных материалов и надежным механизмом."
+                  )}
+                </p>
+              </div>
+              <div className="mt-6 flex items-center justify-between text-xs font-bold text-text-main group-hover:text-amber-500">
+                <span>{t("Kolleksiyaga o'tish", "Смотреть коллекцию")}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Super Clone Card */}
+            <Link
+              href="/shop?quality_tier=super_clone"
+              className="group relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500/10 via-bg-card to-bg-card border border-amber-500/30 p-6 transition-all hover:border-amber-500 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between"
+            >
+              <div className="space-y-2">
+                <span className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-black font-extrabold">
+                  {t("Super Klon 1:1", "Super Clone 1:1")}
+                </span>
+                <h3 className="text-xl font-extrabold text-text-main group-hover:text-amber-500 transition-colors">
+                  {t("Super Klon 1:1", "Super Clone 1:1")}
+                </h3>
+                <p className="text-xs text-text-muted leading-relaxed">
+                  {t(
+                    "Original bilan og'irligi, korpus detallari va mexanizmi bo'yicha deyarli 1:1 bir xil.",
+                    "Неотличимые от оригинала по весу, деталям корпуса и механизму."
+                  )}
+                </p>
+              </div>
+              <div className="mt-6 flex items-center justify-between text-xs font-bold text-amber-500">
+                <span>{t("Kolleksiyaga o'tish", "Смотреть коллекцию")}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -122,7 +155,7 @@ export default function HomePage() {
                 {t("Tanlangan", "Избранное")}
               </span>
               <h2 className="text-xl sm:text-2xl font-extrabold text-text-main mt-0.5">
-                {t("Tavsiya etilgan mahsulotlar", "Рекомендуемые товары")}
+                {t("Tavsiya etilgan soatlar", "Рекомендуемые часы")}
               </h2>
             </div>
 
@@ -160,7 +193,7 @@ export default function HomePage() {
                 />
               </div>
               <span className="text-white font-bold text-sm tracking-[0.2em] uppercase font-mono">
-                KHAN STORE PREMIUM
+                KHAN STORE PREMIUM WATCHES
               </span>
               <span className="text-amber-500 text-xs">✦</span>
             </div>
@@ -177,9 +210,9 @@ export default function HomePage() {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-text-main font-bold text-xs">{t("100% Original", "100% Оригинал")}</h4>
+                <h4 className="text-text-main font-bold text-xs">{t("Sinchiklab tekshirilgan sifat", "Проверенное качество")}</h4>
                 <p className="text-[11px] text-text-muted mt-0.5">
-                  {t("Rasmiy kafolatli aksessuarlar", "Официальная гарантия")}
+                  {t("Har bir soat qo'lda sinchiklab tekshiriladi", "Каждая модель проходит ручную проверку")}
                 </p>
               </div>
             </div>
@@ -189,9 +222,9 @@ export default function HomePage() {
                 <Truck className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-text-main font-bold text-xs">{t("Tezkor yetkazish", "Быстрая доставка")}</h4>
+                <h4 className="text-text-main font-bold text-xs">{t("Butun dunyo bo'ylab yetkazish", "Доставка по всему миру")}</h4>
                 <p className="text-[11px] text-text-muted mt-0.5">
-                  {t("Samarqand va viloyatlarga", "По всем регионам")}
+                  {t("Samarqand, O'zbekiston va xalqaro delivery", "Быстрая доставка по всему миру")}
                 </p>
               </div>
             </div>

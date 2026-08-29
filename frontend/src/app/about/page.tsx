@@ -32,8 +32,8 @@ export default function AboutPage() {
           </div>
           <p className="text-text-muted text-sm sm:text-base max-w-2xl mx-auto font-normal leading-relaxed">
             {t(
-              `${STORE_CONTACTS.storeName} — O'zbekistondagi original soatlar, zamonaviy ko'zoynaklar va sifatli kepkalar marketplace'i. Biz Samarqand shahridagi Atlas savdo markazida va butun mamlakat bo'ylab xizmat ko'rsatamiz.`,
-              `${STORE_CONTACTS.storeName} — маркетплейс оригинальных часов, современных очков и качественных кепок в Узбекистане. Мы работаем в ТРЦ Atlas в г. Самарканд и по всей стране.`
+              `${STORE_CONTACTS.storeName} — Original, Lux Nusxa va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Biz Samarqand shahridagi Atlas savdo markazida va butun dunyo bo'ylab xizmat ko'rsatamiz.`,
+              `${STORE_CONTACTS.storeName} — магазин оригинальных, Lux Копий и Super Clone 1:1 часов в Узбекистане. Мы работаем в ТРЦ Atlas в г. Самарканд и по всему миру.`
             )}
           </p>
         </div>
@@ -46,11 +46,11 @@ export default function AboutPage() {
             <div className="w-12 h-12 rounded-xl bg-accent-main text-accent-fg flex items-center justify-center">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-text-main">{t("100% Kafolat", "100% Гарантия")}</h3>
+            <h3 className="font-bold text-lg text-text-main">{t("Sinchiklab Tekshirilgan Sifat", "Проверенное Качество")}</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Barcha soatlar va aksessuarlar rasmiy sertifikat va kafolat taloni bilan taqdim etiladi.",
-                "Все часы и аксессуары поставляются с официальным сертификатом и гарантийным талоном."
+                "Har bir soat sotuvga chiqarilishidan oldin mutaxassislarimiz tomonidan qo'lda sinchiklab tekshiriladi.",
+                "Каждая модель часов проходит тщательную ручную проверку нашими специалистами."
               )}
             </p>
           </div>
@@ -59,11 +59,11 @@ export default function AboutPage() {
             <div className="w-12 h-12 rounded-xl bg-accent-main text-accent-fg flex items-center justify-center">
               <Truck className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-text-main">{t("Tezkor Yetkazish", "Быстрая Доставка")}</h3>
+            <h3 className="font-bold text-lg text-text-main">{t("Butun Dunyo Bo'ylab Yetkazish", "Доставка По Всему Миру")}</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Samarqand va Toshkent shaharlari bo'ylab tezkor yetkazib berish, barcha viloyatlarga 24-48 soat ichida.",
-                "Быстрая доставка по Самарканду и Ташкенту, во все регионы за 24-48 часов."
+                "Samarqand, Toshkent va butun O'zbekiston hamda xalqaro yo'nalishlarda tezkor va xavfsiz yetkazib berish.",
+                "Быстрая и безопасная доставка по Самарканду, Узбекистану и по всему миру."
               )}
             </p>
           </div>
@@ -72,11 +72,11 @@ export default function AboutPage() {
             <div className="w-12 h-12 rounded-xl bg-accent-main text-accent-fg flex items-center justify-center">
               <Award className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-text-main">{t("Professional Servis", "Профессиональный Сервис")}</h3>
+            <h3 className="font-bold text-lg text-text-main">{t("3 Sifat Darajasi", "3 Уровня Качества")}</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Mutaxassislarimiz mahsulot tanlashda va sotuvdan keyingi servisda doimo yordam berishga tayyor.",
-                "Наши специалисты всегда готовы помочь в выборе товара и послепродажном обслуживании."
+                "Original, Lux Nusxa va Super Klon 1:1 — har bir xaridor didi va hamyoniga mos mukammal soatlar.",
+                "Original, Lux Копия и Super Clone 1:1 — идеальные часы на любой вкус и бюджет."
               )}
             </p>
           </div>

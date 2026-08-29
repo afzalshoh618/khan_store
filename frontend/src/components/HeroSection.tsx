@@ -19,14 +19,14 @@ export default function HeroSection() {
 
         {/* Main Heading */}
         <h1 className="text-2xl sm:text-4xl xl:text-5xl font-extrabold tracking-tight text-text-main leading-tight">
-          {t("Original Soatlar, Ko'zoynaklar va Kepkalar", "Оригинальные Часы, Очки и Кепки")}
+          {t("Original, Lux Nusxa va Super Klon 1:1 Soatlar", "Original, Lux Копия и Super Clone 1:1 Часы")}
         </h1>
 
         {/* Short Subtext */}
-        <p className="text-xs sm:text-sm text-text-muted max-w-xl mx-auto leading-relaxed">
+        <p className="text-xs sm:text-sm text-text-muted max-w-2xl mx-auto leading-relaxed">
           {t(
-            "Samarqand hamda butun O'zbekiston bo'ylab kafolatlangan aksessuarlar do'koni.",
-            "Магазин сертифицированных аксессуаров с доставкой по всему Узбекистану."
+            "Original, Lux Nusxa va Super Klon 1:1 — Shveytsariya va jahon brendlarining eng saralangan soatlari kolleksiyasi. Samarqanddan butun dunyo bo'ylab tezkor yetkazib beramiz.",
+            "Original, Lux Копия и Super Clone 1:1 — эксклюзивная коллекция швейцарских и мировых часов. Быстрая доставка из Самарканда по всему миру."
           )}
         </p>
 

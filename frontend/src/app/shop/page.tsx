@@ -13,6 +13,7 @@ import { useLanguage } from "@/lib/i18n";
 interface FilterSidebarProps {
   brands: any[];
   selectedBrand: string;
+  selectedQualityTier: string;
   selectedGender: string;
   minPriceInput: string;
   maxPriceInput: string;
@@ -29,6 +30,7 @@ interface FilterSidebarProps {
 function FilterSidebar({
   brands,
   selectedBrand,
+  selectedQualityTier,
   selectedGender,
   minPriceInput,
   maxPriceInput,
@@ -60,6 +62,39 @@ function FilterSidebar({
               <X className="w-5 h-5" />
             </button>
           )}
+        </div>
+      </div>
+
+      {/* Quality Tier Filter */}
+      <div>
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
+          {t("Sifat Darajasi", "Уровень Качества")}
+        </h4>
+        <div className="space-y-1">
+          {[
+            { val: "", label: t("Barcha Sifatlar", "Все уровни") },
+            { val: "original", label: t("Original", "Original") },
+            { val: "lux_copy", label: t("Lux Nusxa", "Lux Копия") },
+            { val: "super_clone", label: t("Super Klon 1:1", "Super Clone 1:1") },
+          ].map((tier) => (
+            <button
+              key={tier.val}
+              onClick={() => {
+                updateUrlFilters({ quality_tier: tier.val });
+                if (onClose) onClose();
+              }}
+              className={`w-full text-left text-xs px-3 py-2 rounded-lg transition-colors flex items-center justify-between ${
+                selectedQualityTier === tier.val
+                  ? "bg-accent-main text-accent-fg font-bold shadow-xs"
+                  : "text-text-muted hover:bg-bg-subtle"
+              }`}
+            >
+              <span>{tier.label}</span>
+              {tier.val === "super_clone" && (
+                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-amber-500 text-black">1:1</span>
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -178,7 +213,7 @@ function ShopContent() {
 
   // URL State filters
   const search = searchParams.get("search") || "";
-  const selectedCategory = searchParams.get("category") || "";
+  const selectedQualityTier = searchParams.get("quality_tier") || "";
   const selectedBrand = searchParams.get("brand") || "";
   const selectedGender = searchParams.get("gender") || "";
   const minPrice = searchParams.get("min_price") || "";
@@ -229,7 +264,7 @@ function ShopContent() {
     queryKey: [
       "products",
       search,
-      selectedCategory,
+      selectedQualityTier,
       selectedBrand,
       selectedGender,
       minPrice,
@@ -240,7 +275,7 @@ function ShopContent() {
     queryFn: async () => {
       const params = new URLSearchParams();
       if (search) params.append("search", search);
-      if (selectedCategory) params.append("category_slug", selectedCategory);
+      if (selectedQualityTier) params.append("quality_tier", selectedQualityTier);
       if (selectedBrand) params.append("brand_slug", selectedBrand);
       if (selectedGender) params.append("gender", selectedGender);
       if (minPrice) params.append("min_price", minPrice);
@@ -283,16 +318,17 @@ function ShopContent() {
     if (mobileFiltersOpen) setMobileFiltersOpen(false);
   };
 
-  const categoryTabs = [
-    { slug: "", label: t("Barchasi", "Все"), icon: null },
-    { slug: "watch", label: t("Soatlar", "Часы"), icon: Watch },
-    { slug: "sunglasses", label: t("Ko'zoynaklar", "Очки"), icon: Glasses },
-    { slug: "cap", label: t("Kepkalar", "Кепки"), icon: Crown },
+  const qualityTierTabs = [
+    { tier: "", label: t("Barcha Soatlar", "Все часы") },
+    { tier: "original", label: t("Original", "Original") },
+    { tier: "lux_copy", label: t("Lux Nusxa", "Lux Копия") },
+    { tier: "super_clone", label: t("Super Klon 1:1", "Super Clone 1:1") },
   ];
 
   const filterSidebarProps: FilterSidebarProps = {
     brands: brands || [],
     selectedBrand,
+    selectedQualityTier,
     selectedGender,
     minPriceInput,
     maxPriceInput,
@@ -318,35 +354,53 @@ function ShopContent() {
 
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-text-main">
-            {t("Katalog", "Каталог")}
+            {t("Soatlar Katalogi", "Каталог Часов")}
           </h1>
           <p className="text-sm text-text-muted mt-1">
             {t(
-              "Khan Store Premium — Original soatlar, ko'zoynaklar va kepkalar",
-              "Khan Store Premium — Оригинальные часы, очки и кепки"
+              "Original, Lux Nusxa va Super Klon 1:1 — Shveytsariya hamda brend soatlari kolleksiyasi",
+              "Original, Lux Копия и Super Clone 1:1 — эксклюзивная коллекция часов"
             )}
           </p>
         </div>
 
-        {/* Category Tabs */}
+        {/* Quality Tier Explanation Banner */}
+        <div className="p-4 rounded-xl bg-bg-card border border-border-main text-xs space-y-1.5 shadow-xs">
+          <div className="flex items-center gap-2 font-bold text-text-main">
+            <Sparkles className="w-4 h-4 text-amber-500" />
+            <span>{t("Khan Store Soat Sifat Darajalari:", "Уровни Качества Часов в Khan Store:")}</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-text-muted">
+            <div className="p-2.5 rounded-lg bg-bg-subtle border border-emerald-500/20">
+              <strong className="text-emerald-500 block mb-0.5">{t("ORIGINAL:", "ORIGINAL:")}</strong>
+              {t("Rasmiy kafolatli 100% original Shveytsariya va brend soatlari.", "100% официальные оригинальные швейцарские и бренд часы.")}
+            </div>
+            <div className="p-2.5 rounded-lg bg-bg-subtle border border-blue-500/20">
+              <strong className="text-blue-500 block mb-0.5">{t("LUX NUSXA:", "LUX КОПИЯ:")}</strong>
+              {t("Yuqori sifatli materiallar va chidamli mexanizmga ega nusxa soatlar.", "Высококачественные модели из надежных материалов.")}
+            </div>
+            <div className="p-2.5 rounded-lg bg-bg-subtle border border-amber-500/30">
+              <strong className="text-amber-500 block mb-0.5">{t("SUPER KLON 1:1:", "SUPER CLONE 1:1:")}</strong>
+              {t("Original bilan tashqi ko'rinishi, og'irligi va mexanizmi bo'yicha deyarli farqlanmaydigan eng yuqori sifat.", "Неотличимые от оригинала по внешнему виду, весу и механизму.")}
+            </div>
+          </div>
+        </div>
+
+        {/* Quality Tier Filter Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {categoryTabs.map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <button
-                key={cat.slug}
-                onClick={() => updateUrlFilters({ category: cat.slug })}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
-                  selectedCategory === cat.slug
-                    ? "bg-accent-main text-accent-fg shadow-sm"
-                    : "bg-bg-subtle text-text-muted hover:bg-bg-hover border border-border-main"
-                }`}
-              >
-                {Icon && <Icon className="w-4 h-4" />}
-                {cat.label}
-              </button>
-            );
-          })}
+          {qualityTierTabs.map((tab) => (
+            <button
+              key={tab.tier}
+              onClick={() => updateUrlFilters({ quality_tier: tab.tier })}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                selectedQualityTier === tab.tier
+                  ? "bg-accent-main text-accent-fg shadow-sm font-bold"
+                  : "bg-bg-subtle text-text-muted hover:bg-bg-hover border border-border-main"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 

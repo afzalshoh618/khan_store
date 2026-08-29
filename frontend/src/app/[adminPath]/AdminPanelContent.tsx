@@ -61,6 +61,7 @@ export default function AdminPanelContent() {
   const [price, setPrice] = useState("");
   const [brandId, setBrandId] = useState("1");
   const [categoryId, setCategoryId] = useState("1");
+  const [qualityTier, setQualityTier] = useState("original");
   const [gender, setGender] = useState("Erkaklar uchun");
   const [mechanism, setMechanism] = useState("Avtomatik");
   const [imageUrl, setImageUrl] = useState("");
@@ -424,6 +425,7 @@ export default function AdminPanelContent() {
       price: parseFloat(price),
       brand_id: parseInt(brandId),
       category_id: parseInt(categoryId),
+      quality_tier: qualityTier,
       gender: gender,
       mechanism: mechanism,
       short_description: description,
@@ -1252,17 +1254,15 @@ export default function AdminPanelContent() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-text-main mb-1 font-semibold">Kategoriya *</label>
+                    <label className="block text-text-main mb-1 font-semibold">Sifat Darajasi *</label>
                     <select
-                      value={categoryId}
-                      onChange={(e) => setCategoryId(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
+                      value={qualityTier}
+                      onChange={(e) => setQualityTier(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main font-bold focus:border-accent-main focus:outline-none"
                     >
-                      {categories?.map((c: any) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
+                      <option value="original">Original</option>
+                      <option value="lux_copy">Lux Nusxa</option>
+                      <option value="super_clone">Super Klon 1:1</option>
                     </select>
                   </div>
                   <div>
@@ -1272,10 +1272,9 @@ export default function AdminPanelContent() {
                       onChange={(e) => setMechanism(e.target.value)}
                       className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
                     >
-                      <option value="Kvars">Kvars</option>
                       <option value="Avtomatik">Avtomatik</option>
+                      <option value="Kvars">Kvars</option>
                       <option value="Mexanik (Manual)">Mexanik (Manual)</option>
-                      <option value="Aksessuar">Aksessuar</option>
                     </select>
                   </div>
                 </div>
