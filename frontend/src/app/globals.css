@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: 'Inter', 'Manrope', -apple-system, sans-serif;
+  --bg-main: #FFFFFF;
+  --bg-subtle: #F8F9FA;
+  --bg-card: #FFFFFF;
+  --bg-hover: #F3F4F6;
+  
+  --text-main: #111827;
+  --text-muted: #4B5563;
+  --text-subtle: #6B7280;
+  
+  --border-main: #E5E7EB;
+  --border-subtle: #F3F4F6;
+  
+  --accent-main: #18181B;
+  --accent-hover: #27272A;
+  --accent-fg: #FFFFFF;
+}
+
+.dark {
+  --bg-main: #0F0F10;
+  --bg-subtle: #161618;
+  --bg-card: #1A1A1E;
+  --bg-hover: #242429;
+  
+  --text-main: #F3F4F6;
+  --text-muted: #9CA3AF;
+  --text-subtle: #6B7280;
+  
+  --border-main: #27272A;
+  --border-subtle: #1F1F23;
+  
+  --accent-main: #FFFFFF;
+  --accent-hover: #E5E7EB;
+  --accent-fg: #0F0F10;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Custom Clean Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-subtle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-main);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+/* Infinite Smooth Right to Left Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}

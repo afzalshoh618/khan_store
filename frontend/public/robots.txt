@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin
+Disallow: /khan-sec-panel-987
+Disallow: /api/
+
+Sitemap: https://khanstore.uz/sitemap.xml

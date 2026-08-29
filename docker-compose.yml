@@ -1,0 +1,79 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: khan_mysql
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DB:-${MYSQL_DATABASE:-khan_store_db}}
+      MYSQL_USER: ${MYSQL_USER:-khan_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-khan_password}
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - khan_internal_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: khan_redis
+    restart: always
+    expose:
+      - "6379"
+    networks:
+      - khan_internal_net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: khan_backend
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - MYSQL_HOST=mysql
+      - USE_MYSQL=true
+    expose:
+      - "8000"
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - uploads_data:/app/static/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - khan_internal_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: khan_frontend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - khan_internal_net
+
+networks:
+  khan_internal_net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  uploads_data:
