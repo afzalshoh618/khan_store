@@ -2,11 +2,15 @@ import axios from "axios";
 
 // Use relative /api/v1 in client browser to leverage Next.js rewrites proxy
 const getBaseUrl = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl && envUrl.trim() && envUrl !== "/api/v1") {
+    return envUrl.trim().replace(/\/$/, "");
+  }
   if (typeof window !== "undefined") {
     return "/api/v1";
   }
-  return "http://127.0.0.1:8000/api/v1";
+  const backendHost = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:8000";
+  return `${backendHost.replace(/\/$/, "")}/api/v1`;
 };
 
 export const api = axios.create({
