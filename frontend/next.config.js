@@ -35,8 +35,11 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    const rawHost = process.env.BACKEND_INTERNAL_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
-    const backendHost = rawHost.replace(/\/$/, '');
+    const rawHost =
+      process.env.BACKEND_INTERNAL_URL ||
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      'https://khanstore-production-f1be.up.railway.app';
+    const backendHost = rawHost.replace(/\/$/, '').replace(/\/api\/v1$/, '');
     return [
       {
         source: '/api/v1/:path*',

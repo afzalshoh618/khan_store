@@ -9,8 +9,9 @@ const getBaseUrl = () => {
   if (typeof window !== "undefined") {
     return "/api/v1";
   }
-  const backendHost = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:8000";
-  return `${backendHost.replace(/\/$/, "")}/api/v1`;
+  const backendHost = process.env.BACKEND_INTERNAL_URL || "https://khanstore-production-f1be.up.railway.app";
+  const cleanHost = backendHost.replace(/\/$/, "").replace(/\/api\/v1$/, "");
+  return `${cleanHost}/api/v1`;
 };
 
 export const api = axios.create({
