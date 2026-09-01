@@ -44,6 +44,15 @@ export function getImageUrl(
   if (cleanUrl.startsWith("http://") || cleanUrl.startsWith("https://") || cleanUrl.startsWith("data:")) {
     return cleanUrl;
   }
+  if (cleanUrl.startsWith("/static/") || cleanUrl.startsWith("static/")) {
+    const relativePath = cleanUrl.startsWith("/") ? cleanUrl : `/${cleanUrl}`;
+    const backendHost = (
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      process.env.BACKEND_INTERNAL_URL ||
+      "https://khanstore-production-f1be.up.railway.app"
+    ).replace(/\/$/, "");
+    return `${backendHost}${relativePath}`;
+  }
   return cleanUrl.startsWith("/") ? cleanUrl : `/${cleanUrl}`;
 }
 
