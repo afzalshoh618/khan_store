@@ -32,8 +32,8 @@ export default function AboutPage() {
           </div>
           <p className="text-text-muted text-sm sm:text-base max-w-2xl mx-auto font-normal leading-relaxed">
             {t(
-              `${STORE_CONTACTS.storeName} — Original, Lux Nusxa va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Biz Samarqand shahridagi Atlas savdo markazida va butun dunyo bo'ylab xizmat ko'rsatamiz.`,
-              `${STORE_CONTACTS.storeName} — магазин оригинальных, Lux Копий и Super Clone 1:1 часов в Узбекистане. Мы работаем в ТРЦ Atlas в г. Самарканд и по всему миру.`
+              `${STORE_CONTACTS.storeName} — Original, Lux Kopiya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Biz Samarqand shahridagi Atlas savdo markazida va butun dunyo bo'ylab xizmat ko'rsatamiz.`,
+              `${STORE_CONTACTS.storeName} — магазин оригинальных, Lux Копий и Супер Клон 1:1 часов в Узбекистане. Мы работаем в ТРЦ Atlas в г. Самарканд и по всему миру.`
             )}
           </p>
         </div>
@@ -46,11 +46,11 @@ export default function AboutPage() {
             <div className="w-12 h-12 rounded-xl bg-accent-main text-accent-fg flex items-center justify-center">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-text-main">{t("Sinchiklab Tekshirilgan Sifat", "Проверенное Качество")}</h3>
+            <h3 className="font-bold text-lg text-text-main">{t("1 Yillik Kafolat Sertifikati", "1 Год Гарантийного Сертификата")}</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Har bir soat sotuvga chiqarilishidan oldin mutaxassislarimiz tomonidan qo'lda sinchiklab tekshiriladi.",
-                "Каждая модель часов проходит тщательную ручную проверку нашими специалистами."
+                "Har bir soat uchun rasmiy sertifikat va 1 yillik kafolat taqdim etiladi.",
+                "Каждая модель часов поставляется с официальным сертификатом и гарантией на 1 год."
               )}
             </p>
           </div>
@@ -75,8 +75,8 @@ export default function AboutPage() {
             <h3 className="font-bold text-lg text-text-main">{t("3 Sifat Darajasi", "3 Уровня Качества")}</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Original, Lux Nusxa va Super Klon 1:1 — har bir xaridor didi va hamyoniga mos mukammal soatlar.",
-                "Original, Lux Копия и Super Clone 1:1 — идеальные часы на любой вкус и бюджет."
+                "Original, Lux Kopiya va Super Klon 1:1 — har bir xaridor didi va hamyoniga mos mukammal soatlar.",
+                "Original, Lux Копия и Супер Клон 1:1 — идеальные часы на любой вкус и бюджет."
               )}
             </p>
           </div>
@@ -219,14 +219,33 @@ export default function AboutPage() {
               </div>
 
               {/* Samarqand Atlas Store Location Banner */}
-              <div className="p-4 rounded-xl bg-bg-subtle border border-border-main space-y-2">
-                <h4 className="font-bold text-xs uppercase tracking-wider text-text-main flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-zinc-900" />
-                  <span>{t("Xaritadagi joylashuv", "Расположение на карте")}</span>
-                </h4>
+              <div className="p-4 rounded-xl bg-bg-subtle border border-border-main space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-text-main flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-red-500" />
+                    <span>{t("Yandex Xaritadagi joylashuv", "Расположение на Яндекс Карте")}</span>
+                  </h4>
+                  <a
+                    href={STORE_CONTACTS.yandexMapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    <span>{t("Xaritani ochish", "Открыть карту")} →</span>
+                  </a>
+                </div>
                 <p className="text-xs text-text-muted">
-                  Samarqand shahri, Atlas savdo markazi. Barcha savollar bo'yicha murojaat qilishingiz mumkin.
+                  {lang === "ru" ? STORE_CONTACTS.addressRu : STORE_CONTACTS.addressUz}. Yandex Xarita orqali aniq mo'ljal va marshrutni ko'ring.
                 </p>
+                <a
+                  href={STORE_CONTACTS.yandexMapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white font-bold text-xs hover:bg-red-700 transition-colors shadow-xs"
+                >
+                  <MapPin className="w-4 h-4" />
+                  <span>{t("Yandex Xaritasida Ochish (Yandex Maps)", "Открыть в Яндекс Картах")}</span>
+                </a>
               </div>
 
               <div className="pt-2">

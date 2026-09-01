@@ -26,12 +26,21 @@ class Settings(BaseSettings):
     USE_MYSQL: bool = False
     DATABASE_URL: Union[str, None] = None
 
-    # CORS Origins
-    BACKEND_CORS_ORIGINS: List[str] = [
+    # CORS Origins (accepts list or comma-separated string from env ALLOWED_ORIGINS)
+    ALLOWED_ORIGINS: Union[List[str], str] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
     ]
+    BACKEND_CORS_ORIGINS: List[str] = []
+
+    # Cloudflare R2 Object Storage
+    R2_ACCOUNT_ID: str = ""
+    R2_ACCESS_KEY_ID: str = ""
+    R2_SECRET_ACCESS_KEY: str = ""
+    R2_BUCKET_NAME: str = ""
+    R2_PUBLIC_URL: str = ""
+    USE_R2: bool = False
 
     # Media uploads
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -45,10 +54,45 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
+    @field_validator("BACKEND_CORS_ORIGINS", mode="before")
+    def assemble_cors_origins(cls, v: Union[List[str], str, None], info) -> List[str]:
+        data = info.data
+        allowed = data.get("ALLOWED_ORIGINS") or os.getenv("ALLOWED_ORIGINS")
+        origins = []
+
+        if isinstance(allowed, str):
+            origins.extend([item.strip() for item in allowed.split(",") if item.strip()])
+        elif isinstance(allowed, list):
+            origins.extend(allowed)
+
+        if isinstance(v, str):
+            origins.extend([item.strip() for item in v.split(",") if item.strip()])
+        elif isinstance(v, list):
+            origins.extend(v)
+
+        # Default localhost origins
+        default_origins = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000"]
+        for default in default_origins:
+            if default not in origins:
+                origins.append(default)
+
+        return list(dict.fromkeys(origins))
+
     @field_validator("DATABASE_URL", mode="before")
     def assemble_db_connection(cls, v: Union[str, None], info) -> str:
-        if isinstance(v, str) and v.strip():
-            return v
+        # Check Railway environment variables (MYSQL_URL, MYSQLURL, DATABASE_URL)
+        env_url = v or os.getenv("MYSQL_URL") or os.getenv("MYSQLURL") or os.getenv("DATABASE_URL")
+        if isinstance(env_url, str) and env_url.strip():
+            url = env_url.strip()
+            # Standardize MySQL driver for async SQLAlchemy
+            if url.startswith("mysql://"):
+                url = url.replace("mysql://", "mysql+aiomysql://", 1)
+            elif url.startswith("mysql+pymysql://"):
+                url = url.replace("mysql+pymysql://", "mysql+aiomysql://", 1)
+            elif url.startswith("mysql+mysqldb://"):
+                url = url.replace("mysql+mysqldb://", "mysql+aiomysql://", 1)
+            return url
+
         data = info.data
         host = data.get("MYSQL_HOST", "localhost")
         use_mysql = data.get("USE_MYSQL") or str(os.getenv("USE_MYSQL", "")).lower() == "true"
@@ -58,7 +102,19 @@ class Settings(BaseSettings):
             port = data.get("MYSQL_PORT", 3306)
             db = data.get("MYSQL_DB") or data.get("MYSQL_DATABASE") or "khan_store_db"
             return f"mysql+aiomysql://{user}:{password}@{host}:{port}/{db}"
-        return "sqlite+aiosqlite:///./khan_store.db"
+
+        base_dir = data.get("BASE_DIR") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        db_path = os.path.join(base_dir, "khan_store.db")
+        return f"sqlite+aiosqlite:///{db_path}"
+
+    @property
+    def is_r2_configured(self) -> bool:
+        return bool(
+            self.R2_ACCOUNT_ID and self.R2_ACCOUNT_ID.strip() and
+            self.R2_ACCESS_KEY_ID and self.R2_ACCESS_KEY_ID.strip() and
+            self.R2_SECRET_ACCESS_KEY and self.R2_SECRET_ACCESS_KEY.strip() and
+            self.R2_BUCKET_NAME and self.R2_BUCKET_NAME.strip()
+        )
 
 
 settings = Settings()

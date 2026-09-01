@@ -82,18 +82,18 @@ export default function ProductCard({ product }: { product: ProductType }) {
 
           {/* Quality Tier Badge */}
           {product.quality_tier === "super_clone" && (
-            <span className="absolute top-2.5 right-2.5 z-10 bg-amber-500 text-black font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider">
-              SUPER KLON 1:1
+            <span className="absolute top-2.5 right-2.5 z-10 bg-purple-600/90 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider backdrop-blur-xs">
+              {t("SUPER KLON 1:1", "СУПЕР КЛОН 1:1")}
             </span>
           )}
           {product.quality_tier === "lux_copy" && (
             <span className="absolute top-2.5 right-2.5 z-10 bg-blue-600/90 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider backdrop-blur-xs">
-              LUX KOPYA
+              {t("LUX KOPIYA", "LUX КОПИЯ")}
             </span>
           )}
           {product.quality_tier === "original" && (
             <span className="absolute top-2.5 right-2.5 z-10 bg-emerald-600/90 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider backdrop-blur-xs">
-              ORIGINAL
+              {t("ORIGINAL", "ORIGINAL")}
             </span>
           )}
 

@@ -52,8 +52,8 @@ export default function Navbar() {
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Official Logo */}
-        <Link href="/" className="group flex items-center" title="Khan Store Premium">
-          <div className="relative h-11 w-11 rounded-xl bg-black overflow-hidden border border-amber-500/40 p-0.5 shadow-xs group-hover:scale-105 transition-transform shrink-0 flex items-center justify-center">
+        <Link href="/" className="group flex items-center gap-2.5" title="Khan Store Premium">
+          <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-black overflow-hidden border border-amber-500/40 p-0.5 shadow-xs group-hover:scale-105 transition-transform shrink-0 flex items-center justify-center">
             <Image
               src="/logo.png"
               alt="Khan Store Premium"
@@ -62,6 +62,14 @@ export default function Navbar() {
               priority
               className="object-contain w-full h-full"
             />
+          </div>
+          <div className="flex flex-col justify-center leading-none">
+            <span className="font-extrabold text-xs sm:text-sm tracking-wider text-text-main group-hover:text-amber-500 transition-colors uppercase font-mono">
+              KHAN STORE
+            </span>
+            <span className="text-[8px] font-bold tracking-[0.25em] text-text-subtle uppercase">
+              PREMIUM
+            </span>
           </div>
         </Link>
 
@@ -77,10 +85,10 @@ export default function Navbar() {
             {t("Original", "Original")}
           </Link>
           <Link href="/shop?quality_tier=lux_copy" className="hover:text-text-main transition-colors">
-            {t("Lux Nusxa", "Lux Копия")}
+            {t("Lux Kopiya", "Lux Копия")}
           </Link>
           <Link href="/shop?quality_tier=super_clone" className="hover:text-amber-500 text-amber-500/90 font-bold transition-colors">
-            {t("Super Klon 1:1", "Super Clone 1:1")}
+            {t("Super Klon 1:1", "Супер Клон 1:1")}
           </Link>
         </nav>
 
@@ -132,10 +140,10 @@ export default function Navbar() {
             {t("Original", "Original")}
           </Link>
           <Link href="/shop?quality_tier=lux_copy" onClick={() => setMobileMenuOpen(false)} className="block py-1">
-            {t("Lux Nusxa", "Lux Копия")}
+            {t("Lux Kopiya", "Lux Копия")}
           </Link>
           <Link href="/shop?quality_tier=super_clone" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-amber-500 font-bold">
-            {t("Super Klon 1:1", "Super Clone 1:1")}
+            {t("Super Klon 1:1", "Супер Клон 1:1")}
           </Link>
           <button
             onClick={() => {

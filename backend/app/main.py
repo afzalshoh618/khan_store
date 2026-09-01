@@ -56,6 +56,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS if is_production else ["*"],
+    allow_origin_regex=r"https://.*\.up\.railway\.app" if is_production else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -84,3 +85,10 @@ async def root():
         "store": "Khan Store Premium",
         "version": "1.0.0",
     }
+
+
+@app.get("/health")
+@app.get("/api/health")
+async def health_check():
+    return {"status": "ok"}
+

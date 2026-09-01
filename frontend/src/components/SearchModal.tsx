@@ -236,7 +236,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                 <span>{t("Ommabop qidiruvlar:", "Популярные запросы:")}</span>
               </div>
               <div className="flex flex-wrap gap-2">
-                {["Rolex", "Tissot", "Casio", "Ko'zoynak", "Ray-Ban", "Kepka", "Avtomatik"].map((tag) => (
+                {["Rolex", "Patek Philippe", "Cartier", "Tissot", "Rado", "Casio", "Seiko"].map((tag) => (
                   <button
                     key={tag}
                     onClick={() => setSearchTerm(tag)}

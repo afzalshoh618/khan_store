@@ -46,16 +46,27 @@ async def seed_data():
         session.add(cat_watch)
         await session.flush()
 
-        # 3. Create Brands
+        # 3. Create Brands (Exact 19 Brands)
         brands_data = [
             ("Rolex", "rolex", "Shveytsariya afsonaviy soat brendi"),
-            ("Casio", "casio", "Yaponiya kvars va elektron soatlari"),
-            ("Tissot", "tissot", "Shveytsariya klassik soatlari"),
-            ("Seiko", "seiko", "Yaponiya mexanik va avtomatik soatlari"),
             ("Patek Philippe", "patek-philippe", "Hashamatli Shveytsariya soat uyi"),
+            ("Cartier", "cartier", "Fransiya va Shveytsariya zargarlik va soat uyi"),
             ("Audemars Piguet", "audemars-piguet", "Royallik va sport xronograflari"),
+            ("Tissot", "tissot", "Shveytsariya klassik soatlari"),
+            ("Rado", "rado", "Shveytsariya keramik va yuqori texnologik soatlari"),
+            ("Casio", "casio", "Yaponiya kvars va elektron soatlari"),
+            ("Orient", "orient", "Yaponiya mexanik soatlari"),
+            ("Seiko", "seiko", "Yaponiya mexanik va avtomatik soatlari"),
+            ("Richard Mille", "richard-mille", "Yuqori texnologiyali ultra-lux soatlar"),
+            ("West End Co", "west-end-co", "Klassik va harbiy uslubdagi soatlar"),
+            ("Bulova", "bulova", "Amerika va Shveytsariya aniq kvars soatlari"),
+            ("Khan", "khan", "Khan Store eksklyuziv soat brendi"),
+            ("Frank Muller", "frank-muller", "Murakkab va noodatiy dizayndagi Shveytsariya soatlari"),
+            ("Jacob & Co", "jacob-and-co", "Hashamatli va fantastik zargarlik soatlari"),
             ("Hublot", "hublot", "Zamonaviy fujn dizaynli soatlar"),
             ("Omega", "omega", "Kosmos va g'avvoslar soat markasi"),
+            ("Gucci", "gucci", "Italiya moda va lyuks soatlari"),
+            ("Chopard", "chopard", "Shveytsariya zargarlik va oliy toifa soat markasi"),
         ]
         created_brands = {}
         for name, slug, desc in brands_data:

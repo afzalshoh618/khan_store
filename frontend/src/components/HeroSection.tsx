@@ -19,14 +19,14 @@ export default function HeroSection() {
 
         {/* Main Heading */}
         <h1 className="text-2xl sm:text-4xl xl:text-5xl font-extrabold tracking-tight text-text-main leading-tight">
-          {t("Dunyo Darajasidagi Premium Soatlar Kolleksiyasi", "Коллекция Часов Премиум Исполнения")}
+          {t("Dunyo Darajasidagi Oliy Sifat va Mukammal Did", "Мировой Стандарт Роскоши и Точного Мастерства")}
         </h1>
 
         {/* Short Subtext */}
         <p className="text-xs sm:text-sm text-text-muted max-w-2xl mx-auto leading-relaxed">
           {t(
-            "Original, Lux Nusxa hamda Super Klon 1:1 modellar — har bir did va hamyonga mos eng saralangan Shveytsariya brendlari. Samarqanddan butun dunyo bo'ylab tezkor yetkazib beramiz.",
-            "Модели Original, Lux Копия и Super Clone 1:1 — эксклюзивный выбор под любой стиль и бюджет. Быстрая доставка из Самарканда по всему миру."
+            "Shveytsariya hamda dunyoning yetakchi brend soatlari kolleksiyasi. Original, Lux Kopiya hamda Premium 1:1 Super Klon modellari bilan shaxsiy uslubingizga mukammallik bag'ishlang.",
+            "Эксклюзивная коллекция швейцарских и мировых брендовых часов. Подчеркните свой стиль оригинальными моделями, Lux копиями и 1:1 Супер Клон."
           )}
         </p>
 

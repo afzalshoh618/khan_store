@@ -28,10 +28,10 @@ export default function Footer() {
             </div>
             <div>
               <h4 className="text-text-main font-bold text-sm">
-                {t("Sinchiklab Tekshirilgan Sifat", "Проверенное Качество")}
+                {t("1 Yillik Kafolat Sertifikati", "1 Год Гарантийного Сертификата")}
               </h4>
               <p className="text-xs text-text-muted">
-                {t("Har bir soat qo'lda tekshiriladi", "Каждая модель проходит ручную проверку")}
+                {t("Rasmiy sertifikat va rasmiy kafolat", "Официальный сертификат и гарантия")}
               </p>
             </div>
           </div>
@@ -59,7 +59,7 @@ export default function Footer() {
                 {t("Mijozlarni Qo'llab-quvvatlash", "Поддержка Клиентов")}
               </h4>
               <p className="text-xs text-text-muted">
-                {t("Har kuni 09:00 dan 21:00 gacha", "Ежедневно с 09:00 до 21:00")}
+                {t("Har kuni 10:00 dan 22:00 gacha", "Ежедневно с 10:00 до 22:00")}
               </p>
             </div>
           </div>
@@ -82,8 +82,8 @@ export default function Footer() {
             </div>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Khan Store Premium — Original, Lux Nusxa va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqanddan butun dunyo bo'ylab yetkazish.",
-                "Khan Store Premium — Магазин оригинальных, Lux Копий и Super Clone 1:1 часов. Доставка по всему миру."
+                "Khan Store Premium — Original, Lux Kopiya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqanddan butun dunyo bo'ylab yetkazish.",
+                "Khan Store Premium — Магазин оригинальных, Lux Копий и Супер Клон 1:1 часов. Доставка по всему миру."
               )}
             </p>
           </div>
@@ -100,12 +100,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/shop?quality_tier=lux_copy" className="hover:text-text-main transition-colors">
-                  {t("Lux Nusxa Soatlar", "Часы Lux Копия")}
+                  {t("Lux Kopiya Soatlar", "Часы Lux Копия")}
                 </Link>
               </li>
               <li>
                 <Link href="/shop?quality_tier=super_clone" className="hover:text-amber-500 font-bold transition-colors">
-                  {t("Super Klon 1:1", "Super Clone 1:1")}
+                  {t("Super Klon 1:1", "Супер Клон 1:1")}
                 </Link>
               </li>
             </ul>
@@ -134,9 +134,17 @@ export default function Footer() {
               {t("Aloqa", "Контакты")}
             </h5>
             <ul className="space-y-2.5 text-xs">
-              <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-text-main shrink-0 mt-0.5" />
-                <span>{lang === "ru" ? STORE_CONTACTS.addressRu : STORE_CONTACTS.addressUz}</span>
+              <li>
+                <a
+                  href={STORE_CONTACTS.yandexMapsUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-start gap-2 hover:text-text-main transition-colors group"
+                  title={t("Xaritada ko'rish", "Открыть на карте")}
+                >
+                  <MapPin className="w-4 h-4 text-text-main shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <span className="underline decoration-dotted underline-offset-2">{lang === "ru" ? STORE_CONTACTS.addressRu : STORE_CONTACTS.addressUz}</span>
+                </a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-text-main shrink-0" />

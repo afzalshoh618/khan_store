@@ -39,7 +39,7 @@ export default function AdminPanelContent() {
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [activeTab, setActiveTab] = useState<"stats" | "products" | "orders" | "brands" | "categories" | "promocodes" | "security">("stats");
+  const [activeTab, setActiveTab] = useState<"stats" | "products" | "orders" | "brands" | "promocodes" | "security">("stats");
 
   // Admin login credentials
   const [adminEmail, setAdminEmail] = useState("");
@@ -639,15 +639,7 @@ export default function AdminPanelContent() {
               <Award className="w-3.5 h-3.5" />
               <span>Brendlar</span>
             </button>
-            <button
-              onClick={() => setActiveTab("categories")}
-              className={`px-3.5 py-2 rounded-md transition-all flex items-center gap-1 ${
-                activeTab === "categories" ? "bg-accent-main text-accent-fg shadow-sm" : "text-text-muted hover:text-text-main"
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Kategoriyalar</span>
-            </button>
+
             <button
               onClick={() => setActiveTab("promocodes")}
               className={`px-3.5 py-2 rounded-md transition-all flex items-center gap-1 ${
@@ -751,188 +743,7 @@ export default function AdminPanelContent() {
           </div>
         )}
 
-        {/* Categories Tab */}
-        {activeTab === "categories" && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Create Category Form */}
-            <div className="lg:col-span-5 bg-bg-card p-6 rounded-xl border border-border-main space-y-4 shadow-sm">
-              <h3 className="text-lg font-bold text-text-main flex items-center gap-2">
-                <Layers className="w-5 h-5 text-accent-main" />
-                <span>Yangi Kategoriya Qo'shish</span>
-              </h3>
 
-              {catError && (
-                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{catError}</span>
-                </div>
-              )}
-
-              {catSuccess && (
-                <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-xs flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 shrink-0" />
-                  <span>{catSuccess}</span>
-                </div>
-              )}
-
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setCatError("");
-                  setCatSuccess("");
-                  const generatedSlug = catSlug || catName.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
-                  addCategoryMutation.mutate({
-                    name: catName.trim(),
-                    slug: generatedSlug,
-                    description: catDesc.trim(),
-                    image_url: catImageUrl || null,
-                    display_order: parseInt(catDisplayOrder) || 1,
-                  });
-                }}
-                className="space-y-3 text-xs"
-              >
-                <div>
-                  <label className="block text-text-main mb-1 font-semibold">Kategoriya Nomi *</label>
-                  <input
-                    type="text"
-                    required
-                    value={catName}
-                    onChange={(e) => setCatName(e.target.value)}
-                    placeholder="Soatlar, Ko'zoynaklar, Kepkalar..."
-                    className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-text-main mb-1 font-semibold">Tavsif</label>
-                  <input
-                    type="text"
-                    value={catDesc}
-                    onChange={(e) => setCatDesc(e.target.value)}
-                    placeholder="Klassik va zamonaviy aksessuarlar..."
-                    className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
-                  />
-                </div>
-
-                {/* Category Image Upload (Circular Preview) */}
-                <div className="space-y-2">
-                  <label className="block text-text-main font-semibold">Kategoriya Rasmi (Dumaloq shaklda chiqadi) *</label>
-                  <input
-                    ref={catFileInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp"
-                    onChange={handleCatImageUpload}
-                    className="hidden"
-                  />
-
-                  {catImageUrl ? (
-                    <div className="flex items-center gap-4 p-3 rounded-xl bg-bg-subtle border border-border-main">
-                      <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-amber-500 shrink-0">
-                        <Image src={catImageUrl} alt="Category preview" fill className="object-cover" />
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <p className="text-[11px] text-text-muted truncate max-w-[180px]">{catImageUrl}</p>
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => catFileInputRef.current?.click()}
-                            className="px-2.5 py-1 rounded bg-bg-card border border-border-main text-text-main font-semibold text-[11px] hover:bg-bg-hover"
-                          >
-                            Almashtirish
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setCatImageUrl("")}
-                            className="px-2.5 py-1 rounded bg-red-600 text-white font-semibold text-[11px] hover:bg-red-700"
-                          >
-                            O'chirish
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div
-                      onClick={() => catFileInputRef.current?.click()}
-                      className="w-full border-2 border-dashed border-border-main hover:border-accent-main rounded-xl p-4 text-center bg-bg-subtle hover:bg-bg-hover transition-all cursor-pointer space-y-1"
-                    >
-                      {catUploading ? (
-                        <div className="flex flex-col items-center gap-1 text-text-muted">
-                          <Loader2 className="w-5 h-5 animate-spin text-accent-main" />
-                          <span className="text-[11px] font-semibold">Rasm yuklanmoqda...</span>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center gap-1">
-                          <UploadCloud className="w-5 h-5 text-text-main" />
-                          <span className="text-xs font-bold text-text-main">
-                            Rasm yuklash (Telefondan / Kompyuterdan)
-                          </span>
-                          <span className="text-[10px] text-text-subtle">
-                            PNG, JPEG yoki WEBP
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={catUploading}
-                  className="w-full py-3 rounded-lg bg-accent-main text-accent-fg font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-opacity shadow-sm disabled:opacity-50"
-                >
-                  Kategoriyani Qo'shish
-                </button>
-              </form>
-            </div>
-
-            {/* Existing Categories List */}
-            <div className="lg:col-span-7 bg-bg-card p-6 rounded-xl border border-border-main space-y-4 shadow-sm">
-              <h3 className="text-lg font-bold text-text-main">Mavjud Kategoriyalar Ro'yxati</h3>
-              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                {categories?.map((c: any) => (
-                  <div key={c.id} className="p-3.5 rounded-xl bg-bg-subtle border border-border-main flex items-center justify-between text-xs gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden border border-amber-500/50 shrink-0 bg-black flex items-center justify-center text-white font-bold">
-                        {c.image_url ? (
-                          <Image src={getImageUrl(c.image_url)} alt={c.name} fill className="object-cover" />
-                        ) : (
-                          <span>{c.name.slice(0, 2).toUpperCase()}</span>
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-bold text-text-main text-sm">{c.name}</p>
-                        <p className="text-[11px] text-text-subtle">{c.slug} {c.description && `• ${c.description}`}</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          setEditingCategory(c);
-                          setEditCatName(c.name);
-                          setEditCatDesc(c.description || "");
-                          setEditCatImageUrl(c.image_url || "");
-                          setEditCatDisplayOrder(c.display_order?.toString() || "1");
-                        }}
-                        className="px-2.5 py-1.5 rounded-lg bg-bg-card border border-border-main text-text-main font-semibold hover:bg-bg-hover flex items-center gap-1 text-[11px]"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                        <span>Tahrirlash / Rasm almashtirish</span>
-                      </button>
-                      <button
-                        onClick={() => deleteCategoryMutation.mutate(c.id)}
-                        className="p-1.5 text-text-subtle hover:text-red-500 transition-colors"
-                        title="O'chirish"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* PromoCodes Tab */}
         {activeTab === "promocodes" && (
@@ -1261,7 +1072,7 @@ export default function AdminPanelContent() {
                       className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main font-bold focus:border-accent-main focus:outline-none"
                     >
                       <option value="original">Original</option>
-                      <option value="lux_copy">Lux Nusxa</option>
+                      <option value="lux_copy">Lux Kopiya</option>
                       <option value="super_clone">Super Klon 1:1</option>
                     </select>
                   </div>

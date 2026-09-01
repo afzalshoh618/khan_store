@@ -7,9 +7,9 @@ export const STORE_CONTACTS = {
   telegramChannelName: "@khanstorepremium",
   instagramUrl: "https://instagram.com/khanstorepremium", // Placeholder, easily updated
   email: "info@khanstorepremium.uz",
-  workingHoursUz: "Dushanba — Yakshanba: 09:00 - 21:00 (Tushliksiz)",
-  workingHoursRu: "Понедельник — Воскресенье: 09:00 - 21:00 (Без обеда)",
+  workingHoursUz: "Dushanba — Yakshanba: 10:00 - 22:00 (Tushliksiz)",
+  workingHoursRu: "Понедельник — Воскресенье: 10:00 - 22:00 (Без обеда)",
+  yandexMapsUrl: "https://yandex.ru/maps/-/CTw5eDZL",
   // Yandex Maps Embed URL for Atlas Savdo Markazi, Samarqand
-  mapEmbedUrl:
-    "https://yandex.com/map-widget/v1/?um=constructor%3A3a9f0e1b8b8b8b8b8b8b8b8b8b8b8b8b&amp;source=constructor",
+  mapEmbedUrl: "https://yandex.ru/map-widget/v1/?um=constructor%3A3a9f0e1b8b8b8b8b8b8b8b8b8b8b8b8b&amp;source=constructor",
 };

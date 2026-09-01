@@ -74,8 +74,8 @@ function FilterSidebar({
           {[
             { val: "", label: t("Barcha Sifatlar", "Все уровни") },
             { val: "original", label: t("Original", "Original") },
-            { val: "lux_copy", label: t("Lux Nusxa", "Lux Копия") },
-            { val: "super_clone", label: t("Super Klon 1:1", "Super Clone 1:1") },
+            { val: "lux_copy", label: t("Lux Kopiya", "Lux Копия") },
+            { val: "super_clone", label: t("Super Klon 1:1", "Супер Клон 1:1") },
           ].map((tier) => (
             <button
               key={tier.val}
@@ -91,7 +91,7 @@ function FilterSidebar({
             >
               <span>{tier.label}</span>
               {tier.val === "super_clone" && (
-                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-amber-500 text-black">1:1</span>
+                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/30">1:1</span>
               )}
             </button>
           ))}
@@ -321,8 +321,8 @@ function ShopContent() {
   const qualityTierTabs = [
     { tier: "", label: t("Barcha Soatlar", "Все часы") },
     { tier: "original", label: t("Original", "Original") },
-    { tier: "lux_copy", label: t("Lux Nusxa", "Lux Копия") },
-    { tier: "super_clone", label: t("Super Klon 1:1", "Super Clone 1:1") },
+    { tier: "lux_copy", label: t("Lux Kopiya", "Lux Копия") },
+    { tier: "super_clone", label: t("Super Klon 1:1", "Супер Клон 1:1") },
   ];
 
   const filterSidebarProps: FilterSidebarProps = {
@@ -358,33 +358,13 @@ function ShopContent() {
           </h1>
           <p className="text-sm text-text-muted mt-1">
             {t(
-              "Original, Lux Nusxa va Super Klon 1:1 — Shveytsariya hamda brend soatlari kolleksiyasi",
-              "Original, Lux Копия и Super Clone 1:1 — эксклюзивная коллекция часов"
+              "Har bir did va maqomga mos Shveytsariya hamda dunyo brendlari kolleksiyasi",
+              "Изысканная коллекция швейцарских и мировых часов под любой стиль"
             )}
           </p>
         </div>
 
-        {/* Quality Tier Explanation Banner */}
-        <div className="p-4 rounded-xl bg-bg-card border border-border-main text-xs space-y-1.5 shadow-xs">
-          <div className="flex items-center gap-2 font-bold text-text-main">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>{t("Khan Store Soat Sifat Darajalari:", "Уровни Качества Часов в Khan Store:")}</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1 text-text-muted">
-            <div className="p-2.5 rounded-lg bg-bg-subtle border border-emerald-500/20">
-              <strong className="text-emerald-500 block mb-0.5">{t("ORIGINAL:", "ORIGINAL:")}</strong>
-              {t("Rasmiy kafolatli 100% original Shveytsariya va brend soatlari.", "100% официальные оригинальные швейцарские и бренд часы.")}
-            </div>
-            <div className="p-2.5 rounded-lg bg-bg-subtle border border-blue-500/20">
-              <strong className="text-blue-500 block mb-0.5">{t("LUX NUSXA:", "LUX КОПИЯ:")}</strong>
-              {t("Yuqori sifatli materiallar va chidamli mexanizmga ega nusxa soatlar.", "Высококачественные модели из надежных материалов.")}
-            </div>
-            <div className="p-2.5 rounded-lg bg-bg-subtle border border-amber-500/30">
-              <strong className="text-amber-500 block mb-0.5">{t("SUPER KLON 1:1:", "SUPER CLONE 1:1:")}</strong>
-              {t("Original bilan tashqi ko'rinishi, og'irligi va mexanizmi bo'yicha deyarli farqlanmaydigan eng yuqori sifat.", "Неотличимые от оригинала по внешнему виду, весу и механизму.")}
-            </div>
-          </div>
-        </div>
+
 
         {/* Quality Tier Filter Tabs */}
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
