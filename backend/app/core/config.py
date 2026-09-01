@@ -55,22 +55,17 @@ class Settings(BaseSettings):
     )
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
-    def assemble_cors_origins(cls, v: Union[List[str], str, None], info) -> List[str]:
-        data = info.data
-        allowed = data.get("ALLOWED_ORIGINS") or os.getenv("ALLOWED_ORIGINS")
+    def assemble_cors_origins(cls, v: Union[List[str], str, None], info=None) -> List[str]:
         origins = []
-
-        if isinstance(allowed, str):
+        allowed = os.getenv("ALLOWED_ORIGINS")
+        if isinstance(allowed, str) and allowed.strip():
             origins.extend([item.strip() for item in allowed.split(",") if item.strip()])
-        elif isinstance(allowed, list):
-            origins.extend(allowed)
 
-        if isinstance(v, str):
+        if isinstance(v, str) and v.strip():
             origins.extend([item.strip() for item in v.split(",") if item.strip()])
         elif isinstance(v, list):
             origins.extend(v)
 
-        # Default localhost origins
         default_origins = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8000"]
         for default in default_origins:
             if default not in origins:
@@ -79,33 +74,36 @@ class Settings(BaseSettings):
         return list(dict.fromkeys(origins))
 
     @field_validator("DATABASE_URL", mode="before")
-    def assemble_db_connection(cls, v: Union[str, None], info) -> str:
-        # Check Railway environment variables (MYSQL_URL, MYSQLURL, DATABASE_URL)
-        env_url = v or os.getenv("MYSQL_URL") or os.getenv("MYSQLURL") or os.getenv("DATABASE_URL")
-        if isinstance(env_url, str) and env_url.strip():
-            url = env_url.strip()
-            # Standardize MySQL driver for async SQLAlchemy
-            if url.startswith("mysql://"):
-                url = url.replace("mysql://", "mysql+aiomysql://", 1)
-            elif url.startswith("mysql+pymysql://"):
-                url = url.replace("mysql+pymysql://", "mysql+aiomysql://", 1)
-            elif url.startswith("mysql+mysqldb://"):
-                url = url.replace("mysql+mysqldb://", "mysql+aiomysql://", 1)
-            return url
+    def assemble_db_connection(cls, v: Union[str, None], info=None) -> str:
+        try:
+            # Check Railway environment variables (MYSQL_URL, MYSQLURL, DATABASE_URL)
+            env_url = v or os.getenv("MYSQL_URL") or os.getenv("MYSQLURL") or os.getenv("DATABASE_URL")
+            if isinstance(env_url, str) and env_url.strip():
+                url = env_url.strip()
+                if url.startswith("mysql://"):
+                    url = url.replace("mysql://", "mysql+aiomysql://", 1)
+                elif url.startswith("mysql+pymysql://"):
+                    url = url.replace("mysql+pymysql://", "mysql+aiomysql://", 1)
+                elif url.startswith("mysql+mysqldb://"):
+                    url = url.replace("mysql+mysqldb://", "mysql+aiomysql://", 1)
+                return url
 
-        data = info.data
-        host = data.get("MYSQL_HOST", "localhost")
-        use_mysql = data.get("USE_MYSQL") or str(os.getenv("USE_MYSQL", "")).lower() == "true"
-        if host in ["mysql", "khan_mysql"] or use_mysql:
-            user = data.get("MYSQL_USER", "khan_user")
-            password = data.get("MYSQL_PASSWORD", "khan_password")
-            port = data.get("MYSQL_PORT", 3306)
-            db = data.get("MYSQL_DB") or data.get("MYSQL_DATABASE") or "khan_store_db"
-            return f"mysql+aiomysql://{user}:{password}@{host}:{port}/{db}"
+            host = os.getenv("MYSQL_HOST", "localhost")
+            use_mysql = os.getenv("USE_MYSQL", "").lower() == "true" or host in ["mysql", "khan_mysql"]
+            if use_mysql:
+                user = os.getenv("MYSQL_USER", "khan_user")
+                password = os.getenv("MYSQL_PASSWORD", "khan_password")
+                port = os.getenv("MYSQL_PORT", "3306")
+                db = os.getenv("MYSQL_DB") or os.getenv("MYSQL_DATABASE") or "khan_store_db"
+                return f"mysql+aiomysql://{user}:{password}@{host}:{port}/{db}"
 
-        base_dir = data.get("BASE_DIR") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        db_path = os.path.join(base_dir, "khan_store.db")
-        return f"sqlite+aiosqlite:///{db_path}"
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            db_path = os.path.join(base_dir, "khan_store.db")
+            return f"sqlite+aiosqlite:///{db_path}"
+        except Exception:
+            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            db_path = os.path.join(base_dir, "khan_store.db")
+            return f"sqlite+aiosqlite:///{db_path}"
 
     @property
     def is_r2_configured(self) -> bool:
