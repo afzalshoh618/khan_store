@@ -95,12 +95,12 @@ async def on_startup_init_db():
                 prod = res.scalars().first()
                 if not prod:
                     logger.info("Database empty. Auto-seeding initial products & 19 brands...")
-                    from seed import seed_data
+                    from app.core.seed import seed_data
                     await seed_data(drop_existing=False)
                     logger.info("Database auto-seeded successfully!")
             except Exception as seed_err:
                 logger.warning(f"Product query failed, running full seed... {seed_err}")
-                from seed import seed_data
+                from app.core.seed import seed_data
                 await seed_data(drop_existing=False)
     except Exception as e:
         logger.error(f"Startup DB auto-init error: {e}", exc_info=True)
