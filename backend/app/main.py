@@ -78,9 +78,8 @@ app.include_router(uploads_router, prefix=settings.API_V1_STR)
 app.include_router(promocodes_router, prefix=settings.API_V1_STR)
 
 
-@app.on_event("startup")
-async def on_startup_init_db():
-    logger.info("Initializing Database tables & schema...")
+async def async_init_db_task():
+    logger.info("Initializing Database tables & schema in background...")
     try:
         from app.core.database import engine, Base, AsyncSessionLocal
         from app.models.product import Product
@@ -103,7 +102,12 @@ async def on_startup_init_db():
                 from app.core.seed import seed_data
                 await seed_data(drop_existing=False)
     except Exception as e:
-        logger.error(f"Startup DB auto-init error: {e}", exc_info=True)
+        logger.error(f"Background DB auto-init error: {e}", exc_info=True)
+
+
+@app.on_event("startup")
+async def on_startup_init_db():
+    asyncio.create_task(async_init_db_task())
 
 
 
