@@ -122,3 +122,18 @@ async def health_check():
     return {"status": "ok"}
 
 
+@app.get("/api/v1/seed")
+async def manual_seed_endpoint():
+    try:
+        from app.core.seed import seed_data
+        await seed_data(drop_existing=False)
+        return {
+            "status": "success",
+            "message": "Ma'lumotlar bazasi va demo mahsulotlar to'liq yuklandi! Admin login: admin@khanstore.uz | Parol: admin123",
+        }
+    except Exception as e:
+        logger.error(f"Manual seed endpoint error: {e}", exc_info=True)
+        return {"status": "error", "detail": str(e)}
+
+
+

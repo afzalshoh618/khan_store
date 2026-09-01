@@ -39,7 +39,7 @@ async def seed_data(drop_existing: bool = False):
                 role=UserRole.ADMIN,
             )
             session.add(admin_user)
-            await session.flush()
+            await session.commit()
             logger.info(f"[+] Admin user created: Email='{admin_email}'")
         else:
             logger.info(f"[+] Admin user already exists: Email='{admin_email}'")
