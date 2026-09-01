@@ -78,6 +78,28 @@ app.include_router(uploads_router, prefix=settings.API_V1_STR)
 app.include_router(promocodes_router, prefix=settings.API_V1_STR)
 
 
+@app.on_event("startup")
+async def on_startup_init_db():
+    try:
+        from app.core.database import engine, Base, AsyncSessionLocal
+        from app.models.product import Product
+        from sqlalchemy import select
+
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+
+        async with AsyncSessionLocal() as session:
+            res = await session.execute(select(Product))
+            prod = res.scalars().first()
+            if not prod:
+                logger.info("Database empty. Auto-seeding initial products & 19 brands...")
+                from seed import seed_data
+                await seed_data(drop_existing=False)
+                logger.info("Database auto-seeded successfully!")
+    except Exception as e:
+        logger.error(f"Startup DB auto-init error: {e}", exc_info=True)
+
+
 @app.get("/")
 async def root():
     return {
@@ -91,4 +113,5 @@ async def root():
 @app.get("/api/health")
 async def health_check():
     return {"status": "ok"}
+
 

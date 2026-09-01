@@ -10,10 +10,11 @@ from app.models.brand import Brand
 from app.models.product import Product, ProductImage, ProductAttribute, QualityTier
 
 
-async def seed_data():
-    # Drop all existing tables and recreate clean schema
+async def seed_data(drop_existing: bool = True):
+    # Recreate clean schema if requested
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+        if drop_existing:
+            await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as session:
