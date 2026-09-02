@@ -74,7 +74,7 @@ function FilterSidebar({
           {[
             { val: "", label: t("Barcha Sifatlar", "Все уровни") },
             { val: "original", label: t("Original", "Original") },
-            { val: "lux_copy", label: t("Lux Kopiya", "Lux Копия") },
+            { val: "lux_copy", label: t("Lux Copya", "Lux Копия") },
             { val: "super_clone", label: t("Super Klon 1:1", "Супер Клон 1:1") },
           ].map((tier) => (
             <button
@@ -321,7 +321,7 @@ function ShopContent() {
   const qualityTierTabs = [
     { tier: "", label: t("Barcha Soatlar", "Все часы") },
     { tier: "original", label: t("Original", "Original") },
-    { tier: "lux_copy", label: t("Lux Kopiya", "Lux Копия") },
+    { tier: "lux_copy", label: t("Lux Copya", "Lux Копия") },
     { tier: "super_clone", label: t("Super Klon 1:1", "Супер Клон 1:1") },
   ];
 

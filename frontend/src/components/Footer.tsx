@@ -82,7 +82,7 @@ export default function Footer() {
             </div>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Khan Store Premium — Original, Lux Kopiya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqanddan butun dunyo bo'ylab yetkazish.",
+                "Khan Store Premium — Original, Lux Copya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqanddan butun dunyo bo'ylab yetkazish.",
                 "Khan Store Premium — Магазин оригинальных, Lux Копий и Супер Клон 1:1 часов. Доставка по всему миру."
               )}
             </p>
@@ -100,7 +100,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/shop?quality_tier=lux_copy" className="hover:text-text-main transition-colors">
-                  {t("Lux Kopiya Soatlar", "Часы Lux Копия")}
+                  {t("Lux Copya Soatlar", "Часы Lux Копия")}
                 </Link>
               </li>
               <li>

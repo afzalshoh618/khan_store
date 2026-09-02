@@ -32,7 +32,7 @@ export default function AboutPage() {
           </div>
           <p className="text-text-muted text-sm sm:text-base max-w-2xl mx-auto font-normal leading-relaxed">
             {t(
-              `${STORE_CONTACTS.storeName} — Original, Lux Kopiya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Biz Samarqand shahridagi Atlas savdo markazida va butun dunyo bo'ylab xizmat ko'rsatamiz.`,
+              `${STORE_CONTACTS.storeName} — Original, Lux Copya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Biz Samarqand shahridagi Atlas savdo markazida va butun dunyo bo'ylab xizmat ko'rsatamiz.`,
               `${STORE_CONTACTS.storeName} — магазин оригинальных, Lux Копий и Супер Клон 1:1 часов в Узбекистане. Мы работаем в ТРЦ Atlas в г. Самарканд и по всему миру.`
             )}
           </p>
@@ -75,7 +75,7 @@ export default function AboutPage() {
             <h3 className="font-bold text-lg text-text-main">{t("3 Sifat Darajasi", "3 Уровня Качества")}</h3>
             <p className="text-xs text-text-muted leading-relaxed">
               {t(
-                "Original, Lux Kopiya va Super Klon 1:1 — har bir xaridor didi va hamyoniga mos mukammal soatlar.",
+                "Original, Lux Copya va Super Klon 1:1 — har bir xaridor didi va hamyoniga mos mukammal soatlar.",
                 "Original, Lux Копия и Супер Клон 1:1 — идеальные часы на любой вкус и бюджет."
               )}
             </p>

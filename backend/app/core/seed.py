@@ -233,12 +233,12 @@ async def seed_data(drop_existing: bool = False):
                 ],
             },
 
-            # --- LUX NUSXA ---
+            # --- LUX COPYA ---
             {
-                "name": "Audemars Piguet Royal Oak Black (Lux Nusxa)",
+                "name": "Audemars Piguet Royal Oak Black (Lux Copya)",
                 "slug": "audemars-piguet-royal-oak-lux-copy",
-                "short_description": "Yuqori sifatli Lux Kopiya soat, avtomatik mexanizm va sakkiz qirrali korpus.",
-                "description": "Audemars Piguet Royal Oak modelining premium Lux Nusxasi. Alo darajadagi po meva korpus va metall braslet.",
+                "short_description": "Yuqori sifatli Lux Copya soat, avtomatik mexanizm va sakkiz qirrali korpus.",
+                "description": "Audemars Piguet Royal Oak modelining premium Lux Copyasi. Alo darajadagi po meva korpus va metall braslet.",
                 "price": 4800000.0,
                 "original_price": 5500000.0,
                 "stock_quantity": 6,
@@ -254,16 +254,16 @@ async def seed_data(drop_existing: bool = False):
                     "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?q=80&w=1000&auto=format&fit=crop",
                 ],
                 "attributes": [
-                    ("Sifat Darajasi", "Lux Nusxa"),
+                    ("Sifat Darajasi", "Lux Copya"),
                     ("Korpus diametri", "41 mm"),
                     ("Mexanizm", "Avtomatik"),
                 ],
             },
             {
-                "name": "Hublot Big Bang Unico Titanium (Lux Nusxa)",
+                "name": "Hublot Big Bang Unico Titanium (Lux Copya)",
                 "slug": "hublot-big-bang-lux-copy",
-                "short_description": "Sportiv va zamonaviy Lux Nusxa xronograf soat, rezina remen.",
-                "description": "Hublot Big Bang modelining yuqori sifatli Lux Kopiyasi. Skelet siferblat va qulay kauchuk remen.",
+                "short_description": "Sportiv va zamonaviy Lux Copya xronograf soat, rezina remen.",
+                "description": "Hublot Big Bang modelining yuqori sifatli Lux Copyasi. Skelet siferblat va qulay kauchuk remen.",
                 "price": 3900000.0,
                 "original_price": 4500000.0,
                 "stock_quantity": 5,
@@ -279,7 +279,7 @@ async def seed_data(drop_existing: bool = False):
                     "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?q=80&w=1000&auto=format&fit=crop",
                 ],
                 "attributes": [
-                    ("Sifat Darajasi", "Lux Nusxa"),
+                    ("Sifat Darajasi", "Lux Copya"),
                     ("Korpus diametri", "44 mm"),
                 ],
             },

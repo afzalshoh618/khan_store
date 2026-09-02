@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     template: "%s | Khan Store Premium",
   },
   description:
-    "Khan Store Premium — Original, Lux Kopiya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqand va butun dunyo bo'ylab yetkazish.",
-  keywords: "Khan Store Premium, Soatlar, Watch Store Samarqand, Atlas SM, Original Soatlar, Lux Kopiya, Super Klon 1:1, Rolex, Patek Philippe, Tissot",
+    "Khan Store Premium — Original, Lux Copya va Super Klon 1:1 Shveytsariya hamda brend soatlari do'koni. Samarqand va butun dunyo bo'ylab yetkazish.",
+  keywords: "Khan Store Premium, Soatlar, Watch Store Samarqand, Atlas SM, Original Soatlar, Lux Copya, Super Klon 1:1, Rolex, Patek Philippe, Tissot",
   authors: [{ name: "Khan Store Premium" }],
   icons: {
     icon: "/favicon.ico",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Khan Store Premium — Soatlar Do'koni",
-    description: "Original, Lux Kopiya va Super Klon 1:1 soatlar. Samarqanddan butun dunyo bo'ylab yetkazish.",
+    description: "Original, Lux Copya va Super Klon 1:1 soatlar. Samarqanddan butun dunyo bo'ylab yetkazish.",
     images: ["/logo.png"],
   },
 };
