@@ -85,7 +85,7 @@ export default function Navbar() {
             {t("Original", "Original")}
           </Link>
           <Link href="/shop?quality_tier=lux_copy" className="hover:text-text-main transition-colors">
-            {t("Lux Copya", "Lux Копия")}
+            {t("Lux Copy", "Lux Копия")}
           </Link>
           <Link href="/shop?quality_tier=super_clone" className="hover:text-amber-500 text-amber-500/90 font-bold transition-colors">
             {t("Super Klon 1:1", "Супер Клон 1:1")}
@@ -140,7 +140,7 @@ export default function Navbar() {
             {t("Original", "Original")}
           </Link>
           <Link href="/shop?quality_tier=lux_copy" onClick={() => setMobileMenuOpen(false)} className="block py-1">
-            {t("Lux Copya", "Lux Копия")}
+            {t("Lux Copy", "Lux Копия")}
           </Link>
           <Link href="/shop?quality_tier=super_clone" onClick={() => setMobileMenuOpen(false)} className="block py-1 text-amber-500 font-bold">
             {t("Super Klon 1:1", "Супер Клон 1:1")}

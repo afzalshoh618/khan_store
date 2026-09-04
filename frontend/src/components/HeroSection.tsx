@@ -25,7 +25,7 @@ export default function HeroSection() {
         {/* Short Subtext */}
         <p className="text-xs sm:text-sm text-text-muted max-w-2xl mx-auto leading-relaxed">
           {t(
-            "Shveytsariya hamda dunyoning yetakchi brend soatlari kolleksiyasi. Original, Lux Copya hamda Premium 1:1 Super Klon modellari bilan shaxsiy uslubingizga mukammallik bag'ishlang.",
+            "Shveytsariya hamda dunyoning yetakchi brend soatlari kolleksiyasi. Original, Lux Copy hamda Premium 1:1 Super Klon modellari bilan shaxsiy uslubingizga mukammallik bag'ishlang.",
             "Эксклюзивная коллекция швейцарских и мировых брендовых часов. Подчеркните свой стиль оригинальными моделями, Lux копиями и 1:1 Супер Клон."
           )}
         </p>

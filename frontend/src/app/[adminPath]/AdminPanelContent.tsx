@@ -1072,7 +1072,7 @@ export default function AdminPanelContent() {
                       className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main font-bold focus:border-accent-main focus:outline-none"
                     >
                       <option value="original">Original</option>
-                      <option value="lux_copy">Lux Copya</option>
+                      <option value="lux_copy">Lux Copy</option>
                       <option value="super_clone">Super Klon 1:1</option>
                     </select>
                   </div>

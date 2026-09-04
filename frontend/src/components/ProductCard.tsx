@@ -88,7 +88,7 @@ export default function ProductCard({ product }: { product: ProductType }) {
           )}
           {product.quality_tier === "lux_copy" && (
             <span className="absolute top-2.5 right-2.5 z-10 bg-blue-600/90 text-white font-extrabold text-[9px] uppercase px-2 py-0.5 rounded-md shadow-xs tracking-wider backdrop-blur-xs">
-              {t("LUX COPYA", "LUX КОПИЯ")}
+              {t("LUX COPY", "LUX КОПИЯ")}
             </span>
           )}
           {product.quality_tier === "original" && (
