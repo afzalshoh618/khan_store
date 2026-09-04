@@ -189,7 +189,7 @@ export default function ProductDetailPage() {
                 <Check className="w-4 h-4" />
                 <span>{t("Omborda mavjud", "В наличии")}</span>
               </span>
-              <p className="text-[11px] text-text-subtle mt-0.5">{t("Samarqand va viloyatlarga", "Доставка")}</p>
+              <p className="text-[11px] text-text-subtle mt-0.5">{t("O'zbekiston va chet elga yetkazish", "Доставка по Узбекистану и за рубеж")}</p>
             </div>
           </div>
 

@@ -23,6 +23,7 @@ const UZBEKISTAN_REGIONS = [
   { uz: "Sirdaryo viloyati", ru: "Сырдарьинская область" },
   { uz: "Xorazm viloyati", ru: "Хорезмская область" },
   { uz: "Qoraqalpog'iston Respublikasi", ru: "Республика Каракалпакстан" },
+  { uz: "Chet elga (Xalqaro yetkazib berish)", ru: "За рубеж (Международная доставка)" },
 ];
 
 export default function CheckoutPage() {
@@ -56,8 +57,7 @@ export default function CheckoutPage() {
 
   const validatePhone = (phoneStr: string) => {
     const cleaned = phoneStr.replace(/\s+/g, "").replace(/-/g, "");
-    const uzPhoneRegex = /^\+?998\d{9}$/;
-    return uzPhoneRegex.test(cleaned);
+    return /^\+?\d{7,15}$/.test(cleaned);
   };
 
   const handleApplyPromoCode = async () => {
@@ -112,8 +112,8 @@ export default function CheckoutPage() {
     if (!validatePhone(customerPhone)) {
       setValidationError(
         t(
-          "Iltimos, to'g'ri O'zbekiston telefon raqamini kiriting (+998 90 123 45 67 formatida).",
-          "Пожалуйста, введите корректный номер телефона Узбекистана (в формате +998 90 123 45 67)."
+          "Iltimos, to'g'ri telefon raqamini kiriting (Masalan: +998 90 123 45 67 yoki xalqaro formatda).",
+          "Пожалуйста, введите корректный номер телефона (Например: +998 90 123 45 67 или в международном формате)."
         )
       );
       return;
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-text-muted font-medium mb-1">
-                    {t("Telefon raqamingiz (+998) *", "Номер телефона (+998) *")}
+                    {t("Telefon raqamingiz *", "Номер телефона *")}
                   </label>
                   <input
                     type="tel"
@@ -279,7 +279,7 @@ export default function CheckoutPage() {
 
                 <div>
                   <label className="block text-text-muted font-medium mb-1">
-                    {t("Viloyat / Hudud *", "Регион / Область *")}
+                    {t("Viloyat / Hudud / Chet el *", "Регион / Страна *")}
                   </label>
                   <select
                     value={city}
@@ -297,14 +297,18 @@ export default function CheckoutPage() {
 
               <div>
                 <label className="block text-text-muted font-medium mb-1">
-                  {t("To'liq manzil (tuman, ko'cha, uy) *", "Полный адрес (район, улица, дом) *")}
+                  {t("To'liq manzil (tuman, ko'cha, uy / davlat) *", "Полный адрес (район, улица, дом / страна) *")}
                 </label>
                 <textarea
                   required
                   rows={2}
                   value={shippingAddress}
                   onChange={(e) => setShippingAddress(e.target.value)}
-                  placeholder={t("Yunusobod tumani, Amir Temur ko'chasi 45-uy", "Район Юнусабад, ул. Амира Темура 45")}
+                  placeholder={
+                    city.includes("Chet el")
+                      ? t("Davlat, shahar, ko'cha va pochta indeksi", "Страна, город, улица и индекс")
+                      : t("Yunusobod tumani, Amir Temur ko'chasi 45-uy", "Район Юнусабад, ул. Амира Темура 45")
+                  }
                   className="w-full px-4 py-2.5 rounded-lg bg-bg-subtle border border-border-main text-text-main focus:border-text-main focus:outline-none"
                 />
               </div>
