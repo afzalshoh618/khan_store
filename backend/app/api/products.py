@@ -1,7 +1,7 @@
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, or_, and_
+from sqlalchemy import select, func, or_, and_, delete
 from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
@@ -217,14 +217,25 @@ async def update_product(
     db: AsyncSession = Depends(get_db),
     admin: User = Depends(get_current_admin),
 ):
-    result = await db.execute(select(Product).where(Product.id == product_id))
+    result = await db.execute(
+        select(Product)
+        .options(selectinload(Product.images))
+        .where(Product.id == product_id)
+    )
     product = result.scalar_one_or_none()
     if not product:
         raise HTTPException(status_code=404, detail="Mahsulot topilmadi.")
 
     update_data = product_in.model_dump(exclude_unset=True)
+    images_data = update_data.pop("images", None)
+
     for field, value in update_data.items():
         setattr(product, field, value)
+
+    if images_data is not None:
+        await db.execute(delete(ProductImage).where(ProductImage.product_id == product_id))
+        for img in images_data:
+            db.add(ProductImage(product_id=product.id, **img))
 
     await db.commit()
 

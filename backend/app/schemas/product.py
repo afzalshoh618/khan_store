@@ -75,6 +75,7 @@ class ProductUpdate(BaseModel):
     gender: Optional[str] = None
     mechanism: Optional[str] = None
     case_material: Optional[str] = None
+    images: Optional[List[ProductImageBase]] = None
 
 
 class ProductResponse(ProductBase):

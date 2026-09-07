@@ -108,6 +108,22 @@ export default function AdminPanelContent() {
   const [editCatUploading, setEditCatUploading] = useState(false);
   const editCatFileInputRef = useRef<HTMLInputElement>(null);
 
+  // Edit Product state
+  const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [editProductName, setEditProductName] = useState("");
+  const [editProductPrice, setEditProductPrice] = useState("");
+  const [editBrandId, setEditBrandId] = useState("1");
+  const [editCategoryId, setEditCategoryId] = useState("1");
+  const [editQualityTier, setEditQualityTier] = useState("original");
+  const [editGender, setEditGender] = useState("Erkaklar uchun");
+  const [editMechanism, setEditMechanism] = useState("Avtomatik");
+  const [editTelegramPostUrl, setEditTelegramPostUrl] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editProductImages, setEditProductImages] = useState<string[]>([]);
+  const [editProductImageUploading, setEditProductImageUploading] = useState(false);
+  const [editProductImageError, setEditProductImageError] = useState("");
+  const editProductFileInputRef = useRef<HTMLInputElement>(null);
+
   // Fetch stats
   const { data: stats } = useQuery({
     queryKey: ["admin-stats"],
@@ -251,6 +267,19 @@ export default function AdminPanelContent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+    },
+  });
+
+  // Edit Product mutation
+  const updateProductMutation = useMutation({
+    mutationFn: async ({ id, payload }: { id: number; payload: any }) => {
+      return (await api.put(`/products/${id}`, payload)).data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      setEditingProduct(null);
+      setFormSuccess("Mahsulot muvaffaqiyatli tahrirlandi va yangilandi!");
     },
   });
 
@@ -416,6 +445,77 @@ export default function AdminPanelContent() {
     } finally {
       setEditCatUploading(false);
     }
+  };
+
+  const handleStartEditProduct = (p: any) => {
+    setEditingProduct(p);
+    setEditProductName(p.name || "");
+    setEditProductPrice(p.price ? p.price.toString() : "");
+    setEditBrandId(p.brand_id ? p.brand_id.toString() : (brands?.[0]?.id?.toString() || "1"));
+    setEditCategoryId(p.category_id ? p.category_id.toString() : (categories?.[0]?.id?.toString() || "1"));
+    setEditQualityTier(p.quality_tier || "original");
+    setEditGender(p.gender || "Erkaklar uchun");
+    setEditMechanism(p.mechanism || "Avtomatik");
+    setEditTelegramPostUrl(p.telegram_post_url || "");
+    setEditDescription(p.short_description || p.description || "");
+    setEditProductImages(p.images ? p.images.map((img: any) => img.image_url) : []);
+  };
+
+  const handleEditProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    if (editProductImages.length >= 5) {
+      setEditProductImageError("Maksimum 5 ta rasm yuklash mumkin.");
+      return;
+    }
+
+    setEditProductImageError("");
+    setEditProductImageUploading(true);
+
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        if (editProductImages.length + newUrls.length >= 5) break;
+        const formData = new FormData();
+        formData.append("file", files[i]);
+        const res = await api.post("/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        if (res.data?.url) {
+          newUrls.push(res.data.url);
+        }
+      }
+      setEditProductImages((prev) => [...prev, ...newUrls].slice(0, 5));
+    } catch (err: any) {
+      setEditProductImageError(err.response?.data?.detail || "Rasm yuklashda xatolik.");
+    } finally {
+      setEditProductImageUploading(false);
+    }
+  };
+
+  const handleSaveProductEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+
+    const payload = {
+      name: editProductName,
+      price: parseFloat(editProductPrice),
+      brand_id: parseInt(editBrandId),
+      category_id: parseInt(editCategoryId),
+      quality_tier: editQualityTier,
+      gender: editGender,
+      mechanism: editMechanism,
+      short_description: editDescription,
+      telegram_post_url: editTelegramPostUrl.trim() || null,
+      images: editProductImages.map((url, idx) => ({
+        image_url: url,
+        is_primary: idx === 0,
+        display_order: idx,
+      })),
+    };
+
+    updateProductMutation.mutate({ id: editingProduct.id, payload });
   };
 
   const handleAddProduct = (e: React.FormEvent) => {
@@ -1222,16 +1322,37 @@ export default function AdminPanelContent() {
               <h3 className="text-lg font-bold text-text-main">Baza Mahsulotlari</h3>
               <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
                 {productsData?.items?.map((p: any) => (
-                  <div key={p.id} className="p-3 rounded-lg bg-bg-subtle border border-border-main flex items-center justify-between text-xs">
-                    <div>
-                      <p className="font-bold text-text-main">{p.name}</p>
-                      <p className="text-[10px] text-text-subtle">{p.brand?.name} • {p.mechanism}</p>
+                  <div key={p.id} className="p-3 rounded-lg bg-bg-subtle border border-border-main flex items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {p.images && p.images[0] ? (
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-border-main shrink-0 bg-black">
+                          <Image src={getImageUrl(p.images[0].image_url)} alt={p.name} fill className="object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-bg-main border border-border-main flex items-center justify-center text-text-subtle shrink-0">
+                          <Package className="w-5 h-5" />
+                        </div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-text-main truncate">{p.name}</p>
+                        <p className="text-[10px] text-text-subtle truncate">
+                          {p.brand?.name || "Brendsiz"} • {p.mechanism} • <span className="uppercase text-amber-500 font-semibold">{p.quality_tier === 'lux_copy' ? 'Lux Copy' : p.quality_tier}</span>
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-text-main">{formatPrice(p.price)}</span>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-bold text-text-main hidden sm:inline">{formatPrice(p.price)}</span>
+                      <button
+                        onClick={() => handleStartEditProduct(p)}
+                        className="p-2 rounded-lg bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 transition-colors"
+                        title="Mahsulotni tahrirlash"
+                      >
+                        <Edit3 className="w-4 h-4" />
+                      </button>
                       <button
                         onClick={() => deleteProductMutation.mutate(p.id)}
-                        className="p-1.5 text-text-subtle hover:text-red-500 transition-colors"
+                        className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors"
                         title="Mahsulotni o'chirish"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -1240,6 +1361,219 @@ export default function AdminPanelContent() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Product Modal */}
+        {editingProduct && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+            <div className="bg-bg-card border border-border-main rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+              <button
+                onClick={() => setEditingProduct(null)}
+                className="absolute top-4 right-4 p-1 rounded-lg bg-bg-subtle text-text-muted hover:text-text-main"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <h3 className="text-lg font-bold text-text-main flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-amber-500" />
+                <span>Mahsulotni Tahrirlash: {editingProduct.name}</span>
+              </h3>
+
+              <form onSubmit={handleSaveProductEdit} className="space-y-3 text-xs">
+                <div>
+                  <label className="block text-text-main mb-1 font-semibold">Mahsulot Nomi *</label>
+                  <input
+                    type="text"
+                    required
+                    value={editProductName}
+                    onChange={(e) => setEditProductName(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-text-main mb-1 font-semibold">Narxi (so'm) *</label>
+                    <input
+                      type="number"
+                      required
+                      value={editProductPrice}
+                      onChange={(e) => setEditProductPrice(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-text-main mb-1 font-semibold">Brend *</label>
+                    <select
+                      value={editBrandId}
+                      onChange={(e) => setEditBrandId(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
+                    >
+                      {brands?.map((b: any) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-text-main mb-1 font-semibold">Sifat Darajasi *</label>
+                    <select
+                      value={editQualityTier}
+                      onChange={(e) => setEditQualityTier(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main font-bold focus:border-accent-main focus:outline-none"
+                    >
+                      <option value="original">Original</option>
+                      <option value="lux_copy">Lux Copy</option>
+                      <option value="super_clone">Super Klon 1:1</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-text-main mb-1 font-semibold">Mexanizm / Tur</label>
+                    <select
+                      value={editMechanism}
+                      onChange={(e) => setEditMechanism(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
+                    >
+                      <option value="Avtomatik">Avtomatik</option>
+                      <option value="Kvars">Kvars</option>
+                      <option value="Mexanik (Manual)">Mexanik (Manual)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Edit Product Images Upload Section (Up to 5 Images max) */}
+                <div className="space-y-3 pt-2 border-t border-border-subtle">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="block text-text-main font-semibold">Mahsulot Rasmlari (Maksimum 5 ta) *</label>
+                      <span className="text-[10px] text-text-subtle">1-rasm asosiy muqova (cover) bo'ladi</span>
+                    </div>
+                    <span className="text-xs font-mono font-bold text-amber-500">{editProductImages.length} / 5</span>
+                  </div>
+
+                  {editProductImageError && (
+                    <div className="p-2 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs">
+                      {editProductImageError}
+                    </div>
+                  )}
+
+                  <input
+                    ref={editProductFileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handleEditProductImageUpload}
+                    className="hidden"
+                  />
+
+                  {/* Images Thumbnails Grid */}
+                  <div className="grid grid-cols-5 gap-2">
+                    {editProductImages.map((imgUrl, idx) => (
+                      <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-border-main bg-bg-subtle group">
+                        <Image src={getImageUrl(imgUrl)} alt={`Product ${idx + 1}`} fill className="object-cover" />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => setEditProductImages((prev) => prev.filter((_, i) => i !== idx))}
+                            className="p-1 rounded-full bg-red-600 text-white"
+                            title="O'chirish"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        {idx === 0 && (
+                          <span className="absolute bottom-0 inset-x-0 bg-amber-500 text-black text-[8px] font-bold text-center py-0.5">
+                            Asosiy
+                          </span>
+                        )}
+                      </div>
+                    ))}
+
+                    {editProductImages.length < 5 && (
+                      <button
+                        type="button"
+                        onClick={() => editProductFileInputRef.current?.click()}
+                        disabled={editProductImageUploading}
+                        className="aspect-square rounded-lg border-2 border-dashed border-border-main hover:border-accent-main flex flex-col items-center justify-center gap-1 bg-bg-subtle hover:bg-bg-hover transition-colors text-text-muted hover:text-text-main"
+                      >
+                        {editProductImageUploading ? (
+                          <Loader2 className="w-4 h-4 animate-spin text-accent-main" />
+                        ) : (
+                          <>
+                            <Plus className="w-4 h-4" />
+                            <span className="text-[9px] font-bold">+Rasm</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <input
+                      type="url"
+                      placeholder="yoki Rasm URL manzilini kiriting..."
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          const val = (e.target as HTMLInputElement).value.trim();
+                          if (val && editProductImages.length < 5) {
+                            setEditProductImages((prev) => [...prev, val].slice(0, 5));
+                            (e.target as HTMLInputElement).value = "";
+                          }
+                        }
+                      }}
+                      className="flex-1 px-3 py-1.5 rounded-lg bg-bg-main border border-border-main text-text-main text-xs focus:border-accent-main focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-text-main mb-1 font-semibold flex items-center gap-1.5">
+                    <Send className="w-3.5 h-3.5 text-blue-500" />
+                    <span>Telegram Post Linki</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={editTelegramPostUrl}
+                    onChange={(e) => setEditTelegramPostUrl(e.target.value)}
+                    placeholder="https://t.me/khanstore_sam/123"
+                    className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main text-xs focus:border-accent-main focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-text-main mb-1 font-semibold">Qisqa Tavsif</label>
+                  <textarea
+                    rows={2}
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main focus:border-accent-main focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex gap-2 pt-3 border-t border-border-main">
+                  <button
+                    type="button"
+                    onClick={() => setEditingProduct(null)}
+                    className="flex-1 py-2.5 rounded-lg border border-border-main text-text-muted font-bold hover:bg-bg-subtle"
+                  >
+                    Bekor qilish
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={editProductImageUploading}
+                    className="flex-1 py-2.5 rounded-lg bg-accent-main text-accent-fg font-bold shadow-xs hover:opacity-90 disabled:opacity-50"
+                  >
+                    O'zgarishlarni Saqlash
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
