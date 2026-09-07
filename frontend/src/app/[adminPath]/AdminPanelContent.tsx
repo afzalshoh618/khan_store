@@ -65,6 +65,7 @@ export default function AdminPanelContent() {
   const [gender, setGender] = useState("Erkaklar uchun");
   const [mechanism, setMechanism] = useState("Avtomatik");
   const [imageUrl, setImageUrl] = useState("");
+  const [telegramPostUrl, setTelegramPostUrl] = useState("");
   const [description, setDescription] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
 
@@ -169,6 +170,7 @@ export default function AdminPanelContent() {
       setProductSlug("");
       setPrice("");
       setProductImages([]);
+      setTelegramPostUrl("");
       setDescription("");
     },
   });
@@ -429,6 +431,7 @@ export default function AdminPanelContent() {
       gender: gender,
       mechanism: mechanism,
       short_description: description,
+      telegram_post_url: telegramPostUrl.trim() || null,
       images: productImages.map((url, idx) => ({
         image_url: url,
         is_primary: idx === 0,
@@ -1175,6 +1178,21 @@ export default function AdminPanelContent() {
                       className="flex-1 px-3 py-1.5 rounded-lg bg-bg-main border border-border-main text-text-main text-xs focus:border-accent-main focus:outline-none"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-text-main mb-1 font-semibold flex items-center gap-1.5">
+                    <Send className="w-3.5 h-3.5 text-blue-500" />
+                    <span>Telegram Post Linki (Kanal posti havolasi)</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={telegramPostUrl}
+                    onChange={(e) => setTelegramPostUrl(e.target.value)}
+                    placeholder="https://t.me/khanstore_sam/123"
+                    className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main text-xs focus:border-accent-main focus:outline-none"
+                  />
+                  <span className="text-[10px] text-text-subtle mt-0.5 block">Telegram kanaldagi ushbu mahsulot posti havolasini kiriting</span>
                 </div>
 
                 <div>

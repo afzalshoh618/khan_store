@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { api, getImageUrl } from "@/lib/api";
 import { useCartStore } from "@/store/useCartStore";
-import { ShoppingBag, ShieldCheck, Truck, ArrowLeft, Check, Sparkles, RefreshCw, Play, X } from "lucide-react";
+import { ShoppingBag, ShieldCheck, Truck, ArrowLeft, Check, Sparkles, RefreshCw, ChevronLeft, ChevronRight, Send, ExternalLink } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import ProductCard from "@/components/ProductCard";
 import SkeletonCard from "@/components/SkeletonCard";
@@ -19,8 +19,11 @@ export default function ProductDetailPage() {
   const { t } = useLanguage();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [showVideo, setShowVideo] = useState(false);
   const [quantity, setQuantity] = useState(1);
+
+  // Swipe gesture state for mobile touch carousel
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
   // Fetch Product Details
   const { data: product, isLoading, isError } = useQuery({
@@ -74,6 +77,35 @@ export default function ProductDetailPage() {
 
   const currentImage = images[selectedImageIndex] || images[0];
 
+  const handlePrevImage = () => {
+    if (images.length <= 1) return;
+    setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const handleNextImage = () => {
+    if (images.length <= 1) return;
+    setSelectedImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  // Touch Swipe handlers
+  const minSwipeDistance = 40;
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEndX(null);
+    setTouchStartX(e.targetTouches[0].clientX);
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.targetTouches[0].clientX);
+  };
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const distance = touchStartX - touchEndX;
+    if (distance > minSwipeDistance) {
+      handleNextImage();
+    } else if (distance < -minSwipeDistance) {
+      handlePrevImage();
+    }
+  };
+
   const formatPrice = (price: number) => {
     return price.toLocaleString("uz-UZ") + " so'm";
   };
@@ -118,39 +150,98 @@ export default function ProductDetailPage() {
 
       {/* Main Details Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left Column: Image Gallery (Up to 5 Images) */}
+        {/* Left Column: Interactive Image Slider / Carousel */}
         <div className="lg:col-span-6 space-y-4">
-          {/* Large Main Image Preview */}
-          <div className="relative aspect-square rounded-2xl overflow-hidden bg-bg-subtle border border-border-main shadow-sm group">
+          {/* Main Image Touch Carousel (Swipeable left/right) */}
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="relative aspect-square rounded-2xl overflow-hidden bg-bg-subtle border border-border-main shadow-sm group select-none touch-pan-y"
+          >
             <Image
               src={currentImage}
               alt={product.name}
               fill
               priority
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-500 pointer-events-none"
             />
-            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-bg-card/90 border border-border-main text-text-main text-[10px] font-bold uppercase tracking-wider backdrop-blur-xs shadow-xs">
+
+            {/* Quality Badge */}
+            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-bg-card/90 border border-border-main text-text-main text-[10px] font-bold uppercase tracking-wider backdrop-blur-xs shadow-xs z-10">
               100% Original
             </div>
+
+            {/* Image Counter Badge */}
+            {images.length > 1 && (
+              <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 text-white text-[10px] font-extrabold font-mono backdrop-blur-xs z-10">
+                {selectedImageIndex + 1} / {images.length}
+              </div>
+            )}
+
+            {/* Left & Right Chevron Arrow Navigation (Visible if > 1 images) */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={handlePrevImage}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-bg-card/90 text-text-main border border-border-main flex items-center justify-center shadow-md hover:bg-bg-card transition-all active:scale-95 z-20"
+                  aria-label="Oldingi rasm"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={handleNextImage}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-bg-card/90 text-text-main border border-border-main flex items-center justify-center shadow-md hover:bg-bg-card transition-all active:scale-95 z-20"
+                  aria-label="Keyingi rasm"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+
+            {/* Dots Slider Indicator (Bottom Center) */}
+            {images.length > 1 && (
+              <div className="absolute bottom-3 inset-x-0 flex justify-center gap-1.5 z-10">
+                {images.map((_: any, idx: number) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImageIndex(idx)}
+                    className={`h-1.5 rounded-full transition-all ${
+                      selectedImageIndex === idx ? "w-6 bg-amber-500" : "w-1.5 bg-white/60 hover:bg-white"
+                    }`}
+                    aria-label={`Rasm ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Thumbnails Selector (Up to 5 images) */}
-          {images.length > 1 && (
-            <div className="flex gap-3 overflow-x-auto pb-1">
-              {images.slice(0, 5).map((imgUrl: string, idx: number) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedImageIndex(idx)}
-                  className={`relative w-20 h-20 rounded-xl overflow-hidden border transition-all shrink-0 ${
-                    selectedImageIndex === idx
-                      ? "border-amber-500 ring-2 ring-amber-500/30 opacity-100"
-                      : "border-border-main opacity-70 hover:opacity-100"
-                  }`}
-                >
-                  <Image src={imgUrl} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
-                </button>
-              ))}
-            </div>
+          {/* Telegram Post Link Card (Below images, above specifications) */}
+          {product.telegram_post_url && (
+            <a
+              href={product.telegram_post_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-all font-semibold text-xs group shadow-xs"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                  <Send className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="block font-bold text-text-main text-xs sm:text-sm">
+                    {t("Telegram kanaldagi rasmiy post", "Официальный пост в Telegram")}
+                  </span>
+                  <span className="text-[11px] text-text-muted">
+                    {t("Batafsil ma'lumot va videoni Telegram'da ko'rish", "Смотреть подробнее в Telegram")}
+                  </span>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform flex items-center gap-1 shrink-0">
+                <span>{t("Ochish", "Открыть")}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </span>
+            </a>
           )}
         </div>
 

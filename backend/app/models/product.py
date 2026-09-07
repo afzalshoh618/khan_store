@@ -20,6 +20,7 @@ class Product(Base):
     description: Mapped[str] = mapped_column(Text, nullable=True)
     short_description: Mapped[str] = mapped_column(String(500), nullable=True)
     video_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    telegram_post_url: Mapped[str] = mapped_column(String(500), nullable=True)
     
     # Pricing & Stock
     price: Mapped[float] = mapped_column(Float, index=True, nullable=False)

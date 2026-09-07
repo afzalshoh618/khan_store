@@ -37,6 +37,7 @@ class ProductBase(BaseModel):
     description: Optional[str] = None
     short_description: Optional[str] = None
     video_url: Optional[str] = None
+    telegram_post_url: Optional[str] = None
     price: float
     original_price: Optional[float] = None
     stock_quantity: int = 10
@@ -61,6 +62,7 @@ class ProductUpdate(BaseModel):
     description: Optional[str] = None
     short_description: Optional[str] = None
     video_url: Optional[str] = None
+    telegram_post_url: Optional[str] = None
     price: Optional[float] = None
     original_price: Optional[float] = None
     stock_quantity: Optional[int] = None
