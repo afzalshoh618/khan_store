@@ -29,6 +29,7 @@ import {
   Trash2,
   Edit3,
   Layers,
+  Send,
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n";
 import { ThemeToggle } from "@/lib/theme";
