@@ -84,10 +84,16 @@ async def async_init_db_task():
     try:
         from app.core.database import engine, Base, AsyncSessionLocal
         from app.models.product import Product
-        from sqlalchemy import select
+        from sqlalchemy import select, text
 
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            # Safely add telegram_post_url column to existing products table if missing
+            try:
+                await conn.execute(text("ALTER TABLE products ADD COLUMN telegram_post_url VARCHAR(500) NULL;"))
+                logger.info("[DB Auto-Init] Added missing 'telegram_post_url' column to products table.")
+            except Exception as col_err:
+                logger.info(f"[DB Auto-Init] Column 'telegram_post_url' check complete: {col_err}")
 
         async with AsyncSessionLocal() as session:
             try:
