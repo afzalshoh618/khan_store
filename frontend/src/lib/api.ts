@@ -33,6 +33,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Automatic response interceptor to clear expired auth tokens on 401
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      localStorage.removeItem("khan_token");
+      localStorage.removeItem("khan_auth_storage");
+    }
+    return Promise.reject(error);
+  }
+);
+
 export function getImageUrl(
   url?: string | null,
   fallback = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop"
