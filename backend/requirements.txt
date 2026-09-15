@@ -13,4 +13,5 @@ python-multipart>=0.0.9
 email-validator>=2.1.1
 gunicorn>=21.2.0
 boto3>=1.34.0
+Pillow>=10.2.0
 

@@ -55,6 +55,8 @@ class Product(Base):
 
     __table_args__ = (
         Index("idx_product_filter", "brand_id", "category_id", "price"),
+        Index("idx_product_active_created", "is_active", "created_at"),
+        Index("idx_product_brand_quality", "brand_id", "quality_tier"),
     )
 
 

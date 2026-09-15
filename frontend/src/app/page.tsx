@@ -15,15 +15,6 @@ import { STORE_CONTACTS } from "@/config/contacts";
 export default function HomePage() {
   const { t } = useLanguage();
 
-  // Fetch Categories
-  const { data: categories, isLoading: categoriesLoading } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await api.get("/categories");
-      return res.data;
-    },
-  });
-
   // Fetch Featured Products
   const { data: featuredData, isLoading: featuredLoading } = useQuery({
     queryKey: ["featured-products"],

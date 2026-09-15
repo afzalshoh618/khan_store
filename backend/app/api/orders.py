@@ -35,9 +35,12 @@ async def create_order(
     total_amount = 0.0
     order_items_to_create = []
 
+    product_ids = [item_data.product_id for item_data in order_in.items]
+    res = await db.execute(select(Product).where(Product.id.in_(product_ids)))
+    products_map = {p.id: p for p in res.scalars().all()}
+
     for item_data in order_in.items:
-        res = await db.execute(select(Product).where(Product.id == item_data.product_id))
-        product = res.scalar_one_or_none()
+        product = products_map.get(item_data.product_id)
 
         if not product or not product.is_active:
             raise HTTPException(

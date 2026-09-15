@@ -1,9 +1,12 @@
 import os
+import io
 import uuid
 import logging
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
+from PIL import Image, ImageOps
+
 from app.core.config import settings
 from app.models.user import User
 from app.api.deps import get_current_admin
@@ -39,6 +42,35 @@ def get_r2_client():
     )
 
 
+def compress_image_to_webp(image_bytes: bytes, max_dimension: int = 1600, quality: int = 82) -> tuple[bytes, str]:
+    """
+    Resizes large images to max_dimension and converts to WebP with optimal compression quality.
+    Drastically reduces file size (e.g., 5MB to ~150KB).
+    """
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            try:
+                img = ImageOps.exif_transpose(img)
+            except Exception:
+                pass
+
+            if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+                img = img.convert("RGBA")
+            else:
+                img = img.convert("RGB")
+
+            width, height = img.size
+            if width > max_dimension or height > max_dimension:
+                img.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
+
+            output = io.BytesIO()
+            img.save(output, format="WEBP", quality=quality, optimize=True)
+            return output.getvalue(), "image/webp"
+    except Exception as e:
+        logger.warning(f"Image optimization skipped due to error: {e}")
+        return image_bytes, "image/jpeg"
+
+
 @router.post("", status_code=status.HTTP_201_CREATED)
 async def upload_file(
     file: UploadFile = File(...),
@@ -64,11 +96,17 @@ async def upload_file(
             detail=f"Fayl hajmi {max_mb}MB dan oshmasligi kerak.",
         )
 
-    # 3. Generate secure randomized UUID filename
-    ext = ALLOWED_MIME_TYPES[content_type]
+    # 3. Compress & convert images to WebP
+    if not is_video:
+        content, content_type = compress_image_to_webp(content)
+        ext = ".webp"
+    else:
+        ext = ALLOWED_MIME_TYPES[content_type]
+
+    # 4. Generate secure randomized UUID filename
     unique_filename = f"{uuid.uuid4().hex}{ext}"
 
-    # 4. Check if Cloudflare R2 is configured or requested
+    # 5. Check if Cloudflare R2 is configured or requested
     if settings.USE_R2 or settings.is_r2_configured:
         if not settings.is_r2_configured:
             raise HTTPException(
@@ -93,7 +131,7 @@ async def upload_file(
                 detail="Cloudflare R2 bulutli xotiraga fayl yuklashda xatolik yuz berdi.",
             )
 
-    # 5. Local disk fallback (Default for local development)
+    # 6. Local disk fallback (Development only - Production requires Cloudflare R2)
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     file_path = os.path.join(settings.UPLOAD_DIR, unique_filename)
 
@@ -102,4 +140,5 @@ async def upload_file(
 
     url = f"/static/uploads/{unique_filename}"
     return {"url": url, "filename": unique_filename}
+
 

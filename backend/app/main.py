@@ -84,7 +84,8 @@ async def async_init_db_task():
     try:
         from app.core.database import engine, Base, AsyncSessionLocal
         from app.models.product import Product
-        from sqlalchemy import select, text
+        from app.models.brand import Brand
+        from sqlalchemy import select, text, func
 
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
@@ -92,24 +93,25 @@ async def async_init_db_task():
             try:
                 await conn.execute(text("ALTER TABLE products ADD COLUMN telegram_post_url VARCHAR(500) NULL;"))
                 logger.info("[DB Auto-Init] Added missing 'telegram_post_url' column to products table.")
-            except Exception as col_err:
-                logger.info(f"[DB Auto-Init] Column 'telegram_post_url' check complete: {col_err}")
+            except Exception:
+                pass
 
         async with AsyncSessionLocal() as session:
-            try:
-                res = await session.execute(select(Product))
-                prod = res.scalars().first()
-                if not prod:
-                    logger.info("Database empty. Auto-seeding initial products & 19 brands...")
-                    from app.core.seed import seed_data
-                    await seed_data(drop_existing=False)
-                    logger.info("Database auto-seeded successfully!")
-            except Exception as seed_err:
-                logger.warning(f"Product query failed, running full seed... {seed_err}")
+            prod_count_res = await session.execute(select(func.count(Product.id)))
+            prod_count = prod_count_res.scalar() or 0
+
+            brand_count_res = await session.execute(select(func.count(Brand.id)))
+            brand_count = brand_count_res.scalar() or 0
+
+            if prod_count == 0 and brand_count == 0:
+                logger.info("Database completely empty. Auto-seeding initial products & brands...")
                 from app.core.seed import seed_data
                 await seed_data(drop_existing=False)
+                logger.info("Database auto-seeded successfully!")
+            else:
+                logger.info(f"Database contains {prod_count} products & {brand_count} brands. Auto-seed skipped.")
     except Exception as e:
-        logger.error(f"Background DB auto-init error: {e}", exc_info=True)
+        logger.error(f"Background DB auto-init check logged: {e}")
 
 
 @app.on_event("startup")

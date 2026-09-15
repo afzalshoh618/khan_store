@@ -10,8 +10,8 @@ from app.models.brand import Brand
 from app.models.product import Product, ProductImage, ProductAttribute, QualityTier
 
 
-async def seed_data(drop_existing: bool = True):
-    # Recreate clean schema if requested
+async def seed_data(drop_existing: bool = False):
+    # Recreate clean schema ONLY if explicitly requested
     async with engine.begin() as conn:
         if drop_existing:
             await conn.run_sync(Base.metadata.drop_all)
