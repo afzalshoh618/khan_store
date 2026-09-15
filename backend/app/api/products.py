@@ -9,6 +9,8 @@ from app.models.product import Product, ProductImage, ProductAttribute, QualityT
 from app.models.brand import Brand
 from app.models.category import Category
 from app.models.user import User
+from app.models.order import OrderItem
+from app.models.cart import CartItem
 from app.schemas.product import (
     ProductCreate,
     ProductUpdate,
@@ -263,5 +265,27 @@ async def delete_product(
     if not product:
         raise HTTPException(status_code=404, detail="Mahsulot topilmadi.")
 
-    await db.delete(product)
-    await db.commit()
+    # Check if product is referenced in existing customer orders
+    order_items_res = await db.execute(select(OrderItem).where(OrderItem.product_id == product_id))
+    has_orders = bool(order_items_res.scalars().first())
+
+    if has_orders:
+        # Soft delete to preserve historical order logs
+        product.is_active = False
+        await db.commit()
+    else:
+        # Hard delete if no customer order references
+        try:
+            await db.execute(delete(CartItem).where(CartItem.product_id == product_id))
+            await db.execute(delete(ProductImage).where(ProductImage.product_id == product_id))
+            await db.execute(delete(ProductAttribute).where(ProductAttribute.product_id == product_id))
+            await db.delete(product)
+            await db.commit()
+        except Exception:
+            await db.rollback()
+            res = await db.execute(select(Product).where(Product.id == product_id))
+            p = res.scalar_one_or_none()
+            if p:
+                p.is_active = False
+                await db.commit()
+

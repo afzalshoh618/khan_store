@@ -266,6 +266,9 @@ export default function AdminPanelContent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-products"] });
+      queryClient.invalidateQueries({ queryKey: ["new-products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
     },
   });
