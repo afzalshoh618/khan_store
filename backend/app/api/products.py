@@ -18,6 +18,7 @@ from app.schemas.product import (
     ProductListResponse,
 )
 from app.api.deps import get_current_admin
+from app.utils.slug import generate_unique_slug
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -175,15 +176,14 @@ async def create_product(
     db: AsyncSession = Depends(get_db),
     admin: User = Depends(get_current_admin),
 ):
-    # Check slug uniqueness
-    slug_check = await db.execute(select(Product).where(Product.slug == product_in.slug))
-    if slug_check.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Ushbu slug bilan mahsulot allaqachon mavjud.")
+    base_target = product_in.slug if (product_in.slug and product_in.slug.strip()) else product_in.name
+    unique_slug = await generate_unique_slug(db, base_target, Product)
 
     images_data = product_in.images or []
     attributes_data = product_in.attributes or []
 
     product_dict = product_in.model_dump(exclude={"images", "attributes"})
+    product_dict["slug"] = unique_slug
     product = Product(**product_dict)
 
     db.add(product)
@@ -230,6 +230,9 @@ async def update_product(
 
     update_data = product_in.model_dump(exclude_unset=True)
     images_data = update_data.pop("images", None)
+
+    if "slug" in update_data and update_data["slug"]:
+        update_data["slug"] = await generate_unique_slug(db, update_data["slug"], Product, current_id=product_id)
 
     for field, value in update_data.items():
         setattr(product, field, value)

@@ -9,6 +9,8 @@ from app.models.user import User
 from app.schemas.brand import BrandCreate, BrandResponse
 from app.api.deps import get_current_admin
 
+from app.utils.slug import generate_unique_slug
+
 router = APIRouter(prefix="/brands", tags=["Brands"])
 
 
@@ -25,11 +27,12 @@ async def create_brand(
     db: AsyncSession = Depends(get_db),
     admin: User = Depends(get_current_admin),
 ):
-    result = await db.execute(select(Brand).where(Brand.slug == brand_in.slug))
-    if result.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Ushbu slug bilan brend allaqachon mavjud.")
+    base_target = brand_in.slug if (brand_in.slug and brand_in.slug.strip()) else brand_in.name
+    unique_slug = await generate_unique_slug(db, base_target, Brand)
 
-    brand = Brand(**brand_in.model_dump())
+    brand_dict = brand_in.model_dump()
+    brand_dict["slug"] = unique_slug
+    brand = Brand(**brand_dict)
     db.add(brand)
     await db.commit()
     await db.refresh(brand)

@@ -5,7 +5,7 @@ from datetime import datetime
 
 class CategoryBase(BaseModel):
     name: str
-    slug: str
+    slug: Optional[str] = None
     description: Optional[str] = None
     image_url: Optional[str] = None
     display_order: int = 0

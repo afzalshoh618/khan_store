@@ -33,7 +33,7 @@ class ProductAttributeResponse(ProductAttributeBase):
 
 class ProductBase(BaseModel):
     name: str
-    slug: str
+    slug: Optional[str] = None
     description: Optional[str] = None
     short_description: Optional[str] = None
     video_url: Optional[str] = None

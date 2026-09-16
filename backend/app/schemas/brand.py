@@ -5,7 +5,7 @@ from datetime import datetime
 
 class BrandBase(BaseModel):
     name: str
-    slug: str
+    slug: Optional[str] = None
     logo_url: Optional[str] = None
     description: Optional[str] = None
     country: str = "Shveytsariya"

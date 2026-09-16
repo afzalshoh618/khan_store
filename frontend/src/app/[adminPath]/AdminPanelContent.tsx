@@ -523,7 +523,7 @@ export default function AdminPanelContent() {
 
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault();
-    const generatedSlug = productSlug || productName.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    const generatedSlug = productSlug || productName.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
     const payload = {
       name: productName,
@@ -549,7 +549,7 @@ export default function AdminPanelContent() {
   const handleAddBrand = (e: React.FormEvent) => {
     e.preventDefault();
     setBrandSuccess("");
-    const slug = newBrandName.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    const slug = newBrandName.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
     addBrandMutation.mutate({
       name: newBrandName.trim(),
       slug: slug,

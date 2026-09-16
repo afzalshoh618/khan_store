@@ -9,6 +9,8 @@ from app.models.user import User
 from app.schemas.category import CategoryCreate, CategoryUpdate, CategoryResponse
 from app.api.deps import get_current_admin
 
+from app.utils.slug import generate_unique_slug
+
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
 
@@ -25,11 +27,12 @@ async def create_category(
     db: AsyncSession = Depends(get_db),
     admin: User = Depends(get_current_admin),
 ):
-    result = await db.execute(select(Category).where(Category.slug == category_in.slug))
-    if result.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Ushbu slug bilan kategoriya allaqachon mavjud.")
+    base_target = category_in.slug if (category_in.slug and category_in.slug.strip()) else category_in.name
+    unique_slug = await generate_unique_slug(db, base_target, Category)
 
-    category = Category(**category_in.model_dump())
+    cat_dict = category_in.model_dump()
+    cat_dict["slug"] = unique_slug
+    category = Category(**cat_dict)
     db.add(category)
     await db.commit()
     await db.refresh(category)
@@ -49,6 +52,9 @@ async def update_category(
         raise HTTPException(status_code=404, detail="Kategoriya topilmadi.")
 
     update_data = category_in.model_dump(exclude_unset=True)
+    if "slug" in update_data and update_data["slug"]:
+        update_data["slug"] = await generate_unique_slug(db, update_data["slug"], Category, current_id=category_id)
+
     for field, value in update_data.items():
         setattr(category, field, value)
 
