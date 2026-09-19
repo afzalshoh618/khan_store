@@ -1170,7 +1170,7 @@ export default function AdminPanelContent() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="block text-text-main mb-1 font-semibold">Sifat Darajasi *</label>
                     <select
@@ -1193,6 +1193,18 @@ export default function AdminPanelContent() {
                       <option value="Avtomatik">Avtomatik</option>
                       <option value="Kvars">Kvars</option>
                       <option value="Mexanik (Manual)">Mexanik (Manual)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-text-main mb-1 font-semibold">Jins *</label>
+                    <select
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main font-bold focus:border-accent-main focus:outline-none"
+                    >
+                      <option value="Erkaklar uchun">Erkaklar uchun</option>
+                      <option value="Ayollar uchun">Ayollar uchun</option>
+                      <option value="Uniseks">Uniseks</option>
                     </select>
                   </div>
                 </div>
@@ -1423,7 +1435,7 @@ export default function AdminPanelContent() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
                     <label className="block text-text-main mb-1 font-semibold">Sifat Darajasi *</label>
                     <select
@@ -1446,6 +1458,18 @@ export default function AdminPanelContent() {
                       <option value="Avtomatik">Avtomatik</option>
                       <option value="Kvars">Kvars</option>
                       <option value="Mexanik (Manual)">Mexanik (Manual)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-text-main mb-1 font-semibold">Jins *</label>
+                    <select
+                      value={editGender}
+                      onChange={(e) => setEditGender(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-bg-main border border-border-main text-text-main font-bold focus:border-accent-main focus:outline-none"
+                    >
+                      <option value="Erkaklar uchun">Erkaklar uchun</option>
+                      <option value="Ayollar uchun">Ayollar uchun</option>
+                      <option value="Uniseks">Uniseks</option>
                     </select>
                   </div>
                 </div>

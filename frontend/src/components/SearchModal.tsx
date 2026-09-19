@@ -57,7 +57,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const { data: featuredData } = useQuery({
     queryKey: ["search-featured-fallback"],
     queryFn: async () => {
-      const res = await api.get("/products?is_featured=true&limit=4");
+      const res = await api.get("/products/recommended");
       return res.data;
     },
     enabled: isOpen,
@@ -67,7 +67,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   const searchResults = searchData?.items || [];
   const totalResults = searchData?.total || 0;
-  const recommendedProducts = featuredData?.items || [];
+  const recommendedProducts = Array.isArray(featuredData) ? featuredData : (featuredData?.items || []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

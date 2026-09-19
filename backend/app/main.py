@@ -96,6 +96,13 @@ async def async_init_db_task():
             except Exception:
                 pass
 
+            # Safely ensure default gender for existing products
+            try:
+                await conn.execute(text("UPDATE products SET gender = 'Erkaklar uchun' WHERE gender IS NULL OR gender = '';"))
+                logger.info("[DB Auto-Init] Updated default gender for existing products.")
+            except Exception:
+                pass
+
         async with AsyncSessionLocal() as session:
             prod_count_res = await session.execute(select(func.count(Product.id)))
             prod_count = prod_count_res.scalar() or 0

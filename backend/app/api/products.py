@@ -1,3 +1,4 @@
+import random
 from typing import Optional, List
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -145,6 +146,55 @@ async def list_products(
         page=page,
         limit=limit,
     )
+
+
+@router.get("/recommended", response_model=List[ProductResponse])
+async def get_recommended_products(db: AsyncSession = Depends(get_db)):
+    query = (
+        select(Product)
+        .options(
+            joinedload(Product.brand),
+            joinedload(Product.category),
+            selectinload(Product.images),
+            selectinload(Product.attributes),
+        )
+        .where(Product.is_active == True)
+    )
+    result = await db.execute(query)
+    all_products = result.scalars().all()
+
+    if not all_products:
+        return []
+
+    # Group products by brand_id
+    brand_products_map = {}
+    for p in all_products:
+        b_id = p.brand_id
+        if b_id not in brand_products_map:
+            brand_products_map[b_id] = []
+        brand_products_map[b_id].append(p)
+
+    available_brand_ids = list(brand_products_map.keys())
+
+    # Randomly select up to 4 distinct brands
+    selected_brand_ids = random.sample(available_brand_ids, min(4, len(available_brand_ids)))
+
+    recommended = []
+    for b_id in selected_brand_ids:
+        prods = brand_products_map[b_id]
+        recommended.append(random.choice(prods))
+
+    # If fewer than 4 distinct brands exist, fill up with other available products
+    if len(recommended) < 4:
+        used_ids = {p.id for p in recommended}
+        remaining = [p for p in all_products if p.id not in used_ids]
+        random.shuffle(remaining)
+        for p in remaining:
+            if len(recommended) >= 4:
+                break
+            recommended.append(p)
+
+    return [ProductResponse.model_validate(p) for p in recommended]
 
 
 @router.get("/{slug_or_id}", response_model=ProductResponse)

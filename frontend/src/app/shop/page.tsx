@@ -295,11 +295,11 @@ function ShopContent() {
   // Fetch Recommended Featured Products when search has 0 results
   const { data: featuredData } = useQuery({
     queryKey: ["shop-featured-fallback"],
-    queryFn: async () => (await api.get("/products?is_featured=true&limit=6")).data,
+    queryFn: async () => (await api.get("/products/recommended")).data,
     enabled: products.length === 0 && !isLoading,
   });
 
-  const fallbackFeatured = featuredData?.items || [];
+  const fallbackFeatured = Array.isArray(featuredData) ? featuredData : (featuredData?.items || []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

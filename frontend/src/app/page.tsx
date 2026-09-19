@@ -15,11 +15,11 @@ import { STORE_CONTACTS } from "@/config/contacts";
 export default function HomePage() {
   const { t } = useLanguage();
 
-  // Fetch Featured Products
+  // Fetch Recommended Products (4 rotating products from 4 distinct brands)
   const { data: featuredData, isLoading: featuredLoading } = useQuery({
-    queryKey: ["featured-products"],
+    queryKey: ["recommended-products"],
     queryFn: async () => {
-      const res = await api.get("/products?is_featured=true&limit=8");
+      const res = await api.get("/products/recommended");
       return res.data;
     },
   });
@@ -33,7 +33,7 @@ export default function HomePage() {
     },
   });
 
-  const featuredProducts = featuredData?.items || [];
+  const featuredProducts = Array.isArray(featuredData) ? featuredData : (featuredData?.items || []);
   const newProducts = newData?.items || [];
 
   const marqueeItems = Array.from({ length: 10 });
@@ -45,7 +45,7 @@ export default function HomePage() {
 
 
 
-      {/* Featured Products */}
+      {/* Featured / Recommended Products */}
       <section className="bg-bg-main py-10 sm:py-14 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-6">
@@ -69,7 +69,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
             {featuredLoading
-              ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
+              ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
               : featuredProducts.map((product: any) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
